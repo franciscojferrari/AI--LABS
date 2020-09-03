@@ -1,4 +1,5 @@
 import sys
+RECURSIVE = True
 
 
 def elem_wise_product(vector_a, vector_b):
@@ -49,23 +50,32 @@ def parse_input(input_value: str) -> list:
 def T(matrix:list)->list:
     return list(map(list, zip(*matrix)))
 
-def foward_algorithm (A, B, pi, O, first_interation = True):
+
+def foward_algorithm_recursive (A:list, B:list, pi:list, alpha:list, O:list, first_interation:bool = True) -> float:
     if len(O) > 0:
         if first_interation:
-            temp = [elem_wise_product(pi[0], T(B)[O[0]])]
-            O.pop(0)
-            return foward_algorithm(A, B, temp, O, False)
+            alpha = elem_wise_product(pi[0], T(B)[O.pop(0)])
+            return foward_algorithm_recursive(A, B, pi, alpha, O, False)
         else:
-            temp = [elem_wise_product( matrix_mulitplication(pi , A)[0], T(B)[O[0]])]
-            O.pop(0)
-            return foward_algorithm(A, B, temp, O, False)
-    print(sum(pi[0]))
-    
+            alpha = elem_wise_product( matrix_mulitplication([alpha] , A)[0], T(B)[O.pop(0)])
+            return foward_algorithm_recursive(A, B, pi, alpha, O, False)
+    print(sum(alpha))
+
+def foward_algorithm (A:list, B:list, pi:list, O:list, first_interation:bool = True) -> float:
+    for index, emission in enumerate(O):
+        if index == 0:
+            alpha = elem_wise_product(pi[0], T(B)[emission])
+        else:
+            alpha =elem_wise_product( matrix_mulitplication([alpha], A)[0], T(B)[emission])
+    print(sum(alpha))
+
 def main():
     file_content = "".join([text for text in sys.stdin])
     A, B, pi, O = parse_input(file_content)
-    foward_algorithm(A, B, pi, O)
-    # parse_output(matrix_mulitplication(matrix_mulitplication(pi, A), B))
+    if RECURSIVE:
+        foward_algorithm_recursive(A, B, pi, None, O)
+    else:
+        foward_algorithm(A, B, pi, O)
 
 
 if __name__ == "__main__":
