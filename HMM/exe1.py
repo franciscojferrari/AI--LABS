@@ -41,7 +41,7 @@ def matrix_mulitplication(a: list, b: list) -> list:
     ]
 
 
-def parse_output(matrix:list)->str:
+def parse_output(matrix : list)->str:
     rows = len(matrix)
     columns = len(matrix[0])
     list = [rows, columns] + [item for row in matrix for item in row]
