@@ -1,0 +1,35 @@
+import sys
+
+
+def parse_input(input_value: str) -> list:
+    """Parse input string of HMM0 from kattis
+
+    Args:
+        input_value (str): input string
+
+    Returns:
+        list: A list with the matrixes [A, B, pi]
+    """
+    matrixes = []
+    for rows in input_value.splitlines():
+        if len(rows) > 2:
+            values = rows.strip().split(" ")
+            dimensions = int(float(values[1]))
+            matrix_values = [float(item) for item in values[2:]]
+
+            matrixes.append(
+                [
+                    matrix_values[i : i + dimensions]
+                    for i in range(0, len(matrix_values), dimensions)
+                ]
+            )
+    return matrixes
+
+def main():
+    file_content = "".join([text for text in sys.stdin])
+    A, B, pi = parse_input(file_content)
+    parse_output(matrix_mulitplication(matrix_mulitplication(pi, A), B))
+
+
+if __name__ == "__main__":
+    main()

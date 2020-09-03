@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HMM/exe1.py" beforeDir="false" afterPath="$PROJECT_DIR$/HMM/exe1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HMM/sample_00.in" beforeDir="false" afterPath="$PROJECT_DIR$/HMM/sample_00.in" afterDir="false" />
-    </list>
+    <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,10 +16,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HMM/exe1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="19" column="36" lean-forward="true" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
+            <state relative-caret-position="21">
+              <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/HMM/exe2.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -35,7 +36,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HMM/sample_01.in">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -69,9 +70,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/HMM/utlis.py" />
-        <option value="$PROJECT_DIR$/HMM/exe1.py" />
         <option value="$PROJECT_DIR$/HMM/sample_00.in" />
         <option value="$PROJECT_DIR$/HMM/sample_01.in" />
+        <option value="$PROJECT_DIR$/HMM/exe1.py" />
+        <option value="$PROJECT_DIR$/HMM/exe2.py" />
       </list>
     </option>
   </component>
@@ -169,16 +171,15 @@
       <option name="presentableId" value="Default" />
       <updated>1599056196349</updated>
       <workItem from="1599056197583" duration="4245000" />
-      <workItem from="1599118457553" duration="1876000" />
+      <workItem from="1599118457553" duration="2138000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6121000" />
+    <option name="totallyTimeSpent" value="6383000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1623" height="1027" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25300443" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -194,7 +195,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.51016045" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.2695187" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -228,19 +229,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HMM/exe1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="19" column="36" lean-forward="true" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/HMM/sample_01.in">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="68" lean-forward="true" selection-start-column="68" selection-end-column="68" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HMM/exe1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HMM/exe2.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
