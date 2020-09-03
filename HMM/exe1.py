@@ -17,7 +17,7 @@ def parse_input(input_value : str) -> list:
     matrixes = []
     # print(input_value.splitlines())
     for rows in input_value.splitlines():
-        values = rows.split(" ")
+        values = rows.strip().split(" ")
         dimensions = int(values[1])
         matrix_values = [float(item) for item in values[2:]]
         
@@ -41,7 +41,7 @@ def matrix_mulitplication(a: list, b: list) -> list:
     ]
 
 
-def parse_output(matrix : list)->str:
+def parse_output(matrix:list)->str:
     rows = len(matrix)
     columns = len(matrix[0])
     list = [rows, columns] + [item for row in matrix for item in row]
