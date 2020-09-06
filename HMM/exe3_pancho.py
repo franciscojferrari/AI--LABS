@@ -99,7 +99,10 @@ def foward_algorithm_recursive (A:List[List], B:List[List], pi:list, alpha:list,
     """
     if len(O) > 0:
         if first_interation:
-            alpha = elem_wise_product(pi[0], T(B)[O.pop(0)])
+            alpha_ = elem_wise_product(pi[0], T(B)[O.pop(0)])
+            c0 = 1 / sum(alpha_)
+            alpha = c0 * alpha_
+
             return foward_algorithm_recursive(A, B, pi, alpha, O, False)
         else:
             alpha = elem_wise_product( matrix_mulitplication([alpha] , A)[0], T(B)[O.pop(0)])
