@@ -193,6 +193,28 @@ def backward_algorithm_recursive(
     return scaled_beta_matrix
 
 
+def backward_algorithm_iterative(
+    A: List[List],
+    B: List[List],
+    O: list,
+    scaling_vector: list,
+    scaled_beta_matrix: List[List] = [],
+) -> float:
+    bt_minus_1 = [scaling_vector[-1] for _ in A]
+    scaled_beta_matrix.append(bt_minus_1)
+
+    for t, emission in enumerate(O[:-1][::-1]):
+        beta = []
+        for i in range(len(A)):
+            beta_temp = 0
+            for j in range(len(A)):
+                beta_temp += A[i][j] * B[j][O[t + 1]] * scaled_beta_matrix[0][j]
+            beta_temp = beta_temp * scaling_vector[t]
+            beta.append(beta_temp)
+        scaled_beta_matrix.insert(0, beta)
+    return scaled_beta_matrix
+
+
 def di_gamma_algorithm_iterative(
     A: List[List],
     B: List[List],
@@ -314,8 +336,8 @@ def find_model(
             A, B, pi, O.copy()
         )
 
-        scaled_beta_matrix = backward_algorithm_recursive(
-            A, B, pi, O.copy(), scaling_vector.copy()
+        scaled_beta_matrix = backward_algorithm_iterative(
+            A, B, O.copy(), scaling_vector.copy()
         )
 
         gamma_list, di_gamma_list = di_gamma_algorithm_iterative(
