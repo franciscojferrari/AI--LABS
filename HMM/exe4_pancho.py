@@ -2,8 +2,7 @@ import sys
 import itertools
 import math
 from typing import List
-RECURSIVE = True
-sys.setrecursionlimit(10000)
+
 
 
 def elem_wise_product(vector_a:list, vector_b:list)->list:
@@ -33,20 +32,6 @@ def elem_wise_product_matrix(matrix_a:list, matrix_b:list)->list:
 
     return [result[i : i + n_columns] for i in range(0, len(result), n_columns)] 
 
-def matrix_mulitplication(a: list, b: list) -> list:
-    """Matrix multiplication.
-
-    Arguments:
-        a: Matrix with dimension n, m.
-        b: Matrix with dimension m, k.
-
-    Returns:
-        Matrix with shape n, k.
-    """
-    return [
-        [sum(ii * jj for ii, jj in zip(i, j)) for j in list(map(list, zip(*b)))]
-        for i in a
-    ]
 
 def parse_input(input_value: str) -> list:
     """Parse input string of HMM0 from kattis
@@ -86,7 +71,7 @@ def T(matrix:list)->list:
     """
     return list(map(list, zip(*matrix)))
 
-def foward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:List[List], alpha:list = [], scaled_alpha_matrix:list = [], scaling_vector:list = [], first_iteration:bool = True,) -> float:
+def foward_algorithm (A:List[List], B:List[List], pi:list, O:List[List], alpha:list = [], scaled_alpha_matrix:list = [], scaling_vector:list = [], first_iteration:bool = True,) -> float:
     """Foward Algo
 
     Args:
@@ -101,32 +86,32 @@ def foward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:List[List
         float: Sum of Alpha
     """
     
-    if len(O) > 0:
-        if first_iteration:
-            alpha = elem_wise_product(pi[0], T(B)[O.pop(0)])
-            c0 = 1 / sum(alpha)
-            alpha = [a*c0 for a in alpha]
-            scaling_vector.append(c0)
-            scaled_alpha_matrix.append(alpha)
-            return foward_algorithm_recursive(A, B, pi, O, alpha, scaled_alpha_matrix, scaling_vector, False)
-        else:
-            alpha = elem_wise_product( 
-                matrix_mulitplication([alpha] , A)[0],
-                 T(B)[O.pop(0)]
-                )
-            ct = 1 / sum(alpha)
-            alpha = [a*ct for a in alpha]
-            scaling_vector.append(ct)
-            scaled_alpha_matrix.append(alpha)
-            return foward_algorithm_recursive(A, B, pi, O, alpha, scaled_alpha_matrix, scaling_vector, False)
-    # print(scaled_alpha_matrix)
-    # print("********")
-    # print(len(scaled_alpha_matrix))
-    # print(len(scaling_vector))
-    # print("********")
+    alpha = elem_wise_product(pi[0], T(B)[O[0]])
+    c0 = 1 / sum(alpha)
+    alpha = [a*c0 for a in alpha]
+    
+    scaling_vector.append(c0)
+    scaled_alpha_matrix.append(alpha)
+    # print(pi)
+
+    for t in range(1, len(O)):
+        alpha = []
+        ct = 0
+        for i in range(len(A)):
+            alpha_temp = 0
+            for j in range(len(A)):
+                alpha_temp += scaled_alpha_matrix[t-1][j] * A[j][i]
+            alpha_temp = alpha_temp * B[i][O[t]]
+            alpha.append(alpha_temp)
+            ct += alpha_temp
+        ct = 1/ct
+        scaling_vector.append(ct)
+        alpha = [a * ct for a in alpha]
+        scaled_alpha_matrix.append(alpha)
+
     return scaled_alpha_matrix, scaling_vector
 
-def backward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:list, scaling_vector:list, scaled_beta_matrix:List[List] = [], first_iteration:bool = True,) -> float:
+def backward_algorithm (A:List[List], B:List[List], pi:list, O:list, scaling_vector:list, scaled_beta_matrix:List[List] = [], first_iteration:bool = True,) -> float:
     bt_minus_1 = [scaling_vector[-1] for _ in A]
     scaled_beta_matrix.append(bt_minus_1)
 
@@ -139,29 +124,9 @@ def backward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:list, s
             beta_temp = beta_temp * scaling_vector[t]
             beta.append(beta_temp)
         scaled_beta_matrix.insert(0, beta)
-    return scaled_beta_matrix
-    # if len(O)>1:
-    #     if first_iteration:
-    #         bt_minus_1 = [scaling_vector[-1] for _ in A]
-    #         scaling_vector.pop(-1)
-    #         scaled_beta_matrix.append(bt_minus_1)
-            
-    #         return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
-    #     else:
-    #         beta = elem_wise_product(
-    #             matrix_mulitplication(A, [B[O.pop(-1)]])[0], scaled_beta_matrix[0]
-    #             )
-    #         print("------", beta)
-    #         # beta = [a*scaled_beta_matrix[0] for a in matrix_mulitplication(A, [B[O.pop(-1)]])[0]]
-    #         ct = scaling_vector.pop(-1)
-    #         beta = [a * ct for a in beta]
-    #         scaled_beta_matrix.insert(0, beta)
-    #         return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
-    # return scaled_beta_matrix            
-
+    return scaled_beta_matrix    
 
 def di_gamma_algorithm (A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list = [], di_gamma_list = []):
-    # print(len(A))
     for t in range(len(O[:-1])):
         di_gamma = []
         for i in range(len(A)):
@@ -176,24 +141,6 @@ def di_gamma_algorithm (A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_
     gamma_list.append(scaled_alpha_matrix[-1])
     return gamma_list, di_gamma_list
 
-    # if len(O) == 1:
-    #     gamma_list.append(scaled_alpha_matrix[-1])
-    #     return gamma_list, di_gamma_list
-    # else:
-    #     di_gamma = []
-    #     emmission_t = O.pop(0)
-    #     current_alpha = scaled_alpha_matrix.pop(0)
-    #     current_betta = scaled_beta_matrix.pop(0)
-    #     for i in enumerate(len(A)):
-    #         di_gamma.append([])
-    #         for j in enumerate(len(A)):
-    #             di_gamma_temp = current_alpha[i] * A[i][j] * B[j][emmission_t] * current_betta[j]
-    #             di_gamma[-1].append(di_gamma_temp)
-    #     gamma = [ sum(row) for row in di_gamma]
-    #     gamma_list.append(gamma)
-    #     di_gamma_list.append(di_gamma)
-    #     return di_gamma_algorithm(A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list, di_gamma_list)
-
 def re_estimate_pi(gamma_list):
     return [gamma_list[0]]
 
@@ -201,27 +148,21 @@ def re_estimate_A(A, gamma_list, di_gamma_list):
     re_estimated_A = []
     for i in range(len(A)):
         re_estimated_A.append([])
-        # print(gamma_list)
-        denom = sum([row[i] for row in gamma_list[::-1]])
+        denom = sum([row[i] for row in gamma_list[:-1]]) 
         for j in range(len(A)):
             number = sum([matrix[i][j] for matrix in di_gamma_list])
-            re_estimated_A[-1].append(number/denom)
+            re_estimated_A[i].append(number/denom)
     return re_estimated_A
 
 def re_estimate_B(B, O, gamma_list, di_gamma_list):
     re_estimated_B = []
-    # print("---------")
-    # print(len(B))
-    # print(len(O))
-    # print(len(gamma_list))
-    # print(len(di_gamma_list))
-    # print("---------")
+    
     for i in range(len(B)):
         re_estimated_B.append([])
         denom = sum([row[i] for row in gamma_list])
         for j in range(len(B[0])):
             number = sum([vector[i] for t, vector in enumerate(gamma_list) if O[t] == j])
-            re_estimated_B[-1].append(number/denom)
+            re_estimated_B[i].append(number/denom)
     return re_estimated_B
 
 def log_PO_given_lambda(scaling_vector):
@@ -232,41 +173,21 @@ def find_model(pi, A, B, O, maxIters):
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    # while (iters < maxIters and logProb > oldLogProb):
-    logProb_check = 0
-    saved_A, saved_B = [], []
-    while (iters < maxIters):
-        # if logProb > oldLogProb:
-        #     saved_A, saved_B = A, B
-        #     logProb_check = 0  
-        # else:
-        #     logProb_check += 1
-        if  1 > (oldLogProb - logProb) and (oldLogProb - logProb) > 0:
-            return A, B
+    while (iters < maxIters and logProb > oldLogProb):
 
-        # print(logProb_check)
         oldLogProb = logProb
-        scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(A, B, pi, O.copy(), [], [], [])
+        scaled_alpha_matrix, scaling_vector = foward_algorithm(A, B, pi, O,[],[],[])
 
-        scaled_beta_matrix = backward_algorithm_recursive(A, B, pi, O.copy(), scaling_vector.copy())
+        scaled_beta_matrix = backward_algorithm(A, B, pi, O, scaling_vector, [])
         
-        gamma_list, di_gamma_list  = di_gamma_algorithm(A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy(), [], [])
-        
-        # print(pi)
-        # print(A)
-        # print(iters)
-        # print(sum(pi[0]))
+        gamma_list, di_gamma_list  = di_gamma_algorithm(A, B, O, scaled_alpha_matrix, scaled_beta_matrix,[],[])
+
         pi = re_estimate_pi(gamma_list)
         A = re_estimate_A(A, gamma_list, di_gamma_list)
         B = re_estimate_B(B, O, gamma_list, di_gamma_list)
         
-        # print(A)
-        # print(B)
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
-        # print(oldLogProb - logProb)
-        # break
-        # print(iters)
     return A, B
 
 def print_list(input_list:list)->str:
@@ -283,8 +204,7 @@ def parse_matrix(matrix:list)->str:
 def main():
     file_content = "".join([text for text in sys.stdin])
     A, B, pi, O = parse_input(file_content)
-    # B = [int(element) for row in B for element in row]
-    # print(find_model(pi, A, B, O, 100))
+
     new_A, new_B = find_model(pi, A, B, O, 50)
     parse_matrix(new_A)
     parse_matrix(new_B)
