@@ -112,6 +112,33 @@ def T(matrix: List[List]) -> List[List]:
     """
     return list(map(list, zip(*matrix)))
 
+def forward_algorithm_iterative(
+    A: List[List],
+    B: List[List],
+    pi: List,
+    O: List[List],
+):
+    scaled_alpha_matrix = []
+    scaling_vector = []
+
+    b_t = T(B)
+
+    alpha = elem_wise_product(pi[0], b_t[O[0]])
+    c0 = 1 / sum(alpha)
+    alpha = [a * c0 for a in alpha]
+    scaled_alpha_matrix.append(alpha)
+
+    for emission in O[1:]:
+        alpha = elem_wise_product(
+            matrix_mulitplication([scaled_alpha_matrix[-1]], A)[0], b_t[emission]
+        )
+        ct = 1 / sum(alpha)
+        alpha = [a * ct for a in alpha]
+        scaling_vector.append(ct)
+        scaled_alpha_matrix.append(alpha)
+
+    return scaled_alpha_matrix, scaling_vector
+
 
 def foward_algorithm_recursive(
     A: List[List],
@@ -202,7 +229,10 @@ def di_gamma_algorithm_iterative(
 
             for j, _ in enumerate(A):
                 di_gamma_temp = (
-                        scaled_alpha_matrix[t][i] * A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[t+1][j]
+                    scaled_alpha_matrix[t][i]
+                    * A[i][j]
+                    * B[j][O[t + 1]]
+                    * scaled_beta_matrix[t + 1][j]
                 )
                 di_gamma[-1].append(di_gamma_temp)
 
@@ -252,30 +282,65 @@ def log_PO_given_lambda(scaling_vector: List) -> float:
     return -sum([math.log(ci) for ci in scaling_vector])
 
 
-def find_model(
-    pi: List[List], A: List[List], B: List[List], O: List, maxIters: int
-) -> Tuple[List, List[List], List[List]]:
+# def find_model(
+#     pi: List[List], A: List[List], B: List[List], O: List, maxIters: int
+# ) -> Tuple[List, List[List], List[List]]:
+#     iters = 0
+#     logProb = -99999999999
+#     oldLogProb = -math.inf
+#
+#     while iters < maxIters and logProb > oldLogProb:
+#         oldLogProb = logProb
+#
+#         scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
+#             A, B, pi, O.copy(), [], [], []
+#         )
+#
+#         # scaled_alpha_matrix_it, scaling_vector_it = forward_algorithm_iterative(
+#         #     A, B, pi, O.copy()
+#         # )
+#
+#         scaled_beta_matrix = backward_algorithm_iterative(
+#             A, B, O.copy(), scaling_vector.copy()
+#         )
+#
+#         gamma_list, di_gamma_list = di_gamma_algorithm_iterative(
+#             A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy()
+#         )
+#         pi = re_estimate_pi(gamma_list.copy())
+#         A = re_estimate_A(A, gamma_list.copy(), di_gamma_list.copy())
+#         B = re_estimate_B(B, O.copy(), gamma_list.copy())
+#         logProb = log_PO_given_lambda(scaling_vector)
+#         iters += 1
+#
+#     return A, B
+
+
+def find_model(pi, A, B, O, maxIters):
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while iters < maxIters and logProb > oldLogProb:
-        oldLogProb = logProb
+    while iters < maxIters:
+        if 1 > (oldLogProb - logProb) > 0:
+            return A, B
 
+        oldLogProb = logProb
         scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
-            A, B, pi, O.copy()
+            A, B, pi, O.copy(), [], [], []
         )
 
         scaled_beta_matrix = backward_algorithm_iterative(
-            A, B, O.copy(), scaling_vector.copy()
+            A, B, pi, O.copy(), scaling_vector.copy()
         )
 
         gamma_list, di_gamma_list = di_gamma_algorithm_iterative(
             A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy()
         )
-        pi = re_estimate_pi(gamma_list.copy())
-        A = re_estimate_A(A, gamma_list.copy(), di_gamma_list.copy())
-        B = re_estimate_B(B, O.copy(), gamma_list.copy())
+
+        pi = re_estimate_pi(gamma_list)
+        A = re_estimate_A(A, gamma_list, di_gamma_list)
+        B = re_estimate_B(B, O, gamma_list, di_gamma_list)
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
 
@@ -287,12 +352,12 @@ def print_list(input_list: list) -> None:
     print(" ".join(return_list))
 
 
-def parse_matrix(matrix:list)->str:
+def parse_matrix(matrix: list) -> str:
     rows = len(matrix)
     columns = len(matrix[0])
     list = [rows, columns] + [item for row in matrix for item in row]
 
-    print (' '.join(map(str, list)))
+    print(" ".join(map(str, list)))
 
 
 def main():
