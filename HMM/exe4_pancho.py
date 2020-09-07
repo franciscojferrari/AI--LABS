@@ -134,10 +134,55 @@ def forward_algorithm_iterative(
         )
         ct = 1 / sum(alpha)
         alpha = [a * ct for a in alpha]
-        print(alpha)
         scaling_vector.append(ct)
         scaled_alpha_matrix.append(alpha)
 
+    return scaled_alpha_matrix, scaling_vector
+
+def foward_algorithm_recursive(
+    A: List[List],
+    B: List[List],
+    pi: List,
+    O: List[List],
+    alpha: List = [],
+    scaled_alpha_matrix: List = [],
+    scaling_vector: List = [],
+    first_iteration: bool = True,
+) -> Tuple[List[List], List[List]]:
+    """Foward Algo
+
+    Args:
+        A (List[List]): Transition Matrix
+        B (List[List]): Emission / Output probability matrix
+        pi (list): Initial state vector
+        alpha (list): vector that represents the probability of being in state j after seeing the first t observations,
+        O (list): vector of emissions sequences itself
+        first_iteration (bool, optional): states if the function is the first time is running. Defaults to True.
+
+    Returns:
+        float: Sum of Alpha
+    """
+    if len(O) > 0:
+        if first_iteration:
+            alpha = elem_wise_product(pi[0], T(B)[O.pop(0)])
+            c0 = 1 / sum(alpha)
+            alpha = [a * c0 for a in alpha]
+            scaling_vector.append(c0)
+            scaled_alpha_matrix.append(alpha)
+            return foward_algorithm_recursive(
+                A, B, pi, O, alpha, scaled_alpha_matrix, scaling_vector, False
+            )
+        else:
+            alpha = elem_wise_product(
+                matrix_mulitplication([alpha], A)[0], T(B)[O.pop(0)]
+            )
+            ct = 1 / sum(alpha)
+            alpha = [a * ct for a in alpha]
+            scaling_vector.append(ct)
+            scaled_alpha_matrix.append(alpha)
+            return foward_algorithm_recursive(
+                A, B, pi, O, alpha, scaled_alpha_matrix, scaling_vector, False
+            )
     return scaled_alpha_matrix, scaling_vector
 
 
@@ -245,9 +290,10 @@ def find_model(
     while iters < maxIters and logProb > oldLogProb:
         oldLogProb = logProb
 
-        scaled_alpha_matrix, scaling_vector = forward_algorithm_iterative(
-            A, B, pi, O
+        scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
+            A, B, pi, O, [], [], [], True
         )
+        print(scaled_alpha_matrix[:3], scaling_vector[:3])
 
         scaled_beta_matrix = backward_algorithm_iterative(
             A, B, O, scaling_vector

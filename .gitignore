@@ -1,3 +1,4 @@
 .vscode
 .idea
 *.xml
+.idea/workspace.xml
