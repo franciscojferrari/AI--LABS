@@ -197,12 +197,12 @@ def di_gamma_algorithm_iterative(
     for t, _ in enumerate(O[:-1]):
         di_gamma = []
 
-        for i, state in enumerate(A[0]):
+        for i, _ in enumerate(A):
             di_gamma.append([])
 
-            for j, state in enumerate(A[0]):
+            for j, _ in enumerate(A):
                 di_gamma_temp = (
-                        scaled_alpha_matrix[t][i] * A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[t+1][i]
+                        scaled_alpha_matrix[t][i] * A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[t+1][j]
                 )
                 di_gamma[-1].append(di_gamma_temp)
 
@@ -262,17 +262,13 @@ def find_model(
     while iters < maxIters and logProb > oldLogProb:
         oldLogProb = logProb
 
-        start = time.time()
         scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
             A, B, pi, O.copy()
         )
-        print("Time elapsed for recursive forward", time.time() - start)
 
-        start = time.time()
         scaled_beta_matrix = backward_algorithm_iterative(
             A, B, O.copy(), scaling_vector.copy()
         )
-        print("Time elapsed for iterative backward", time.time() - start)
 
         gamma_list, di_gamma_list = di_gamma_algorithm_iterative(
             A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy()
