@@ -1,5 +1,6 @@
 import sys
 import math
+import time
 from typing import List, Tuple
 
 RECURSIVE = True
@@ -159,40 +160,6 @@ def foward_algorithm_recursive(
     return scaled_alpha_matrix, scaling_vector
 
 
-def backward_algorithm_recursive(
-    A: List[List],
-    B: List[List],
-    pi: List,
-    O: List,
-    scaling_vector: List,
-    scaled_beta_matrix: List[List] = [],
-    first_iteration: bool = True,
-) -> List[List]:
-    if len(O) > 1:
-        if first_iteration:
-            bt_minus_1 = [scaling_vector[-1] for _ in A]
-            scaling_vector.pop(-1)
-            scaled_beta_matrix.append(bt_minus_1)
-
-            return backward_algorithm_recursive(
-                A, B, pi, O, scaling_vector, scaled_beta_matrix, False
-            )
-        else:
-            b_temp = B[O.pop(-1)]
-            beta = matrix_mulitplication(
-                A, T([elem_wise_product(b_temp, scaled_beta_matrix[0])])
-            )
-            ct = scaling_vector.pop(-1)
-
-            beta = [a[0] * ct for a in beta]
-            scaled_beta_matrix.insert(0, beta)
-            return backward_algorithm_recursive(
-                A, B, pi, O, scaling_vector, scaled_beta_matrix, False
-            )
-
-    return scaled_beta_matrix
-
-
 def backward_algorithm_iterative(
     A: List[List],
     B: List[List],
@@ -200,6 +167,8 @@ def backward_algorithm_iterative(
     scaling_vector: List,
     scaled_beta_matrix: List[List] = [],
 ) -> List[List]:
+    """Faster than recursive backward algorithm
+    """
     bt_minus_1 = [scaling_vector[-1] for _ in A]
     scaled_beta_matrix.append(bt_minus_1)
 
@@ -292,13 +261,18 @@ def find_model(
 
     while iters < maxIters and logProb > oldLogProb:
         oldLogProb = logProb
+
+        start = time.time()
         scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
             A, B, pi, O.copy()
         )
+        print("Time elapsed for recursive forward", time.time() - start)
 
+        start = time.time()
         scaled_beta_matrix = backward_algorithm_iterative(
             A, B, O.copy(), scaling_vector.copy()
         )
+        print("Time elapsed for iterative backward", time.time() - start)
 
         gamma_list, di_gamma_list = di_gamma_algorithm_iterative(
             A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy()
@@ -306,12 +280,10 @@ def find_model(
         pi = re_estimate_pi(gamma_list.copy())
         A = re_estimate_A(A, gamma_list.copy(), di_gamma_list.copy())
         B = re_estimate_B(B, O.copy(), gamma_list.copy())
-        print(pi, A, B)
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
-        print(logProb, oldLogProb)
 
-    return pi, A, B
+    return A, B
 
 
 def print_list(input_list: list) -> None:
@@ -319,10 +291,20 @@ def print_list(input_list: list) -> None:
     print(" ".join(return_list))
 
 
+def parse_matrix(matrix:list)->str:
+    rows = len(matrix)
+    columns = len(matrix[0])
+    list = [rows, columns] + [item for row in matrix for item in row]
+
+    print (' '.join(map(str, list)))
+
+
 def main():
     file_content = "".join([text for text in sys.stdin])
     A, B, pi, O = parse_input(file_content)
-    find_model(pi, A, B, O, 30)
+    new_A, new_B = find_model(pi, A, B, O, 50)
+    parse_matrix(new_A)
+    parse_matrix(new_B)
 
 
 if __name__ == "__main__":
