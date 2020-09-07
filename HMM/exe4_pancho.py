@@ -100,6 +100,7 @@ def foward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:List[List
     Returns:
         float: Sum of Alpha
     """
+    
     if len(O) > 0:
         if first_iteration:
             alpha = elem_wise_product(pi[0], T(B)[O.pop(0)])
@@ -119,47 +120,82 @@ def foward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:List[List
             scaled_alpha_matrix.append(alpha)
             return foward_algorithm_recursive(A, B, pi, O, alpha, scaled_alpha_matrix, scaling_vector, False)
     # print(scaled_alpha_matrix)
+    # print("********")
+    # print(len(scaled_alpha_matrix))
+    # print(len(scaling_vector))
+    # print("********")
     return scaled_alpha_matrix, scaling_vector
 
 def backward_algorithm_recursive (A:List[List], B:List[List], pi:list, O:list, scaling_vector:list, scaled_beta_matrix:List[List] = [], first_iteration:bool = True,) -> float:
-    if len(O)>1:
-        if first_iteration:
-            bt_minus_1 = [scaling_vector[-1] for _ in A]
-            scaling_vector.pop(-1)
-            scaled_beta_matrix.append(bt_minus_1)
-            
-            return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
-        else:
-            beta = elem_wise_product(matrix_mulitplication(A, [B[O.pop(-1)]])[0], scaled_beta_matrix[0])
-            print("------", beta)
-            # beta = [a*scaled_beta_matrix[0] for a in matrix_mulitplication(A, [B[O.pop(-1)]])[0]]
-            ct = scaling_vector.pop(-1)
-            beta = [a * ct for a in beta]
-            scaled_beta_matrix.insert(0, beta)
-            return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
+    bt_minus_1 = [scaling_vector[-1] for _ in A]
+    scaled_beta_matrix.append(bt_minus_1)
+
+    for t, emission in reversed(list(enumerate(O[:-1]))):
+        beta = []
+        for i in range(len(A)):
+            beta_temp = 0
+            for j in range(len(A)):
+                beta_temp +=  A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[0][j]
+            beta_temp = beta_temp * scaling_vector[t]
+            beta.append(beta_temp)
+        scaled_beta_matrix.insert(0, beta)
     return scaled_beta_matrix
+    # if len(O)>1:
+    #     if first_iteration:
+    #         bt_minus_1 = [scaling_vector[-1] for _ in A]
+    #         scaling_vector.pop(-1)
+    #         scaled_beta_matrix.append(bt_minus_1)
+            
+    #         return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
+    #     else:
+    #         beta = elem_wise_product(
+    #             matrix_mulitplication(A, [B[O.pop(-1)]])[0], scaled_beta_matrix[0]
+    #             )
+    #         print("------", beta)
+    #         # beta = [a*scaled_beta_matrix[0] for a in matrix_mulitplication(A, [B[O.pop(-1)]])[0]]
+    #         ct = scaling_vector.pop(-1)
+    #         beta = [a * ct for a in beta]
+    #         scaled_beta_matrix.insert(0, beta)
+    #         return backward_algorithm_recursive(A, B, pi, O, scaling_vector, scaled_beta_matrix, False)
+    # return scaled_beta_matrix            
+
 
 def di_gamma_algorithm (A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list = [], di_gamma_list = []):
-    if len(O) == 1:
-        gamma_list.append(scaled_alpha_matrix[-1])
-        return gamma_list, di_gamma_list
-    else:
+    # print(len(A))
+    for t in range(len(O[:-1])):
         di_gamma = []
-        emmission_t = O.pop(0)
-        current_alpha = scaled_alpha_matrix.pop(0)
-        current_betta = scaled_beta_matrix.pop(0)
-        for i, state in enumerate(A[0]):
+        for i in range(len(A)):
             di_gamma.append([])
-            for j, state in enumerate(A[0]):
-                di_gamma_temp = current_alpha[i] * A[i][j] * B[j][emmission_t] * current_betta[i]
+            for j in range(len(A)):
+                di_gamma_temp = scaled_alpha_matrix[t][i] * A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[t+1][j]
                 di_gamma[-1].append(di_gamma_temp)
         gamma = [ sum(row) for row in di_gamma]
         gamma_list.append(gamma)
         di_gamma_list.append(di_gamma)
-        return di_gamma_algorithm(A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list, di_gamma_list)
+
+    gamma_list.append(scaled_alpha_matrix[-1])
+    return gamma_list, di_gamma_list
+
+    # if len(O) == 1:
+    #     gamma_list.append(scaled_alpha_matrix[-1])
+    #     return gamma_list, di_gamma_list
+    # else:
+    #     di_gamma = []
+    #     emmission_t = O.pop(0)
+    #     current_alpha = scaled_alpha_matrix.pop(0)
+    #     current_betta = scaled_beta_matrix.pop(0)
+    #     for i in enumerate(len(A)):
+    #         di_gamma.append([])
+    #         for j in enumerate(len(A)):
+    #             di_gamma_temp = current_alpha[i] * A[i][j] * B[j][emmission_t] * current_betta[j]
+    #             di_gamma[-1].append(di_gamma_temp)
+    #     gamma = [ sum(row) for row in di_gamma]
+    #     gamma_list.append(gamma)
+    #     di_gamma_list.append(di_gamma)
+    #     return di_gamma_algorithm(A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list, di_gamma_list)
 
 def re_estimate_pi(gamma_list):
-    return gamma_list[0]
+    return [gamma_list[0]]
 
 def re_estimate_A(A, gamma_list, di_gamma_list):
     re_estimated_A = []
@@ -174,6 +210,12 @@ def re_estimate_A(A, gamma_list, di_gamma_list):
 
 def re_estimate_B(B, O, gamma_list, di_gamma_list):
     re_estimated_B = []
+    # print("---------")
+    # print(len(B))
+    # print(len(O))
+    # print(len(gamma_list))
+    # print(len(di_gamma_list))
+    # print("---------")
     for i in range(len(B)):
         re_estimated_B.append([])
         denom = sum([row[i] for row in gamma_list])
@@ -190,37 +232,63 @@ def find_model(pi, A, B, O, maxIters):
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while (iters < maxIters and logProb > oldLogProb):
+    # while (iters < maxIters and logProb > oldLogProb):
+    logProb_check = 0
+    saved_A, saved_B = [], []
+    while (iters < maxIters):
+        # if logProb > oldLogProb:
+        #     saved_A, saved_B = A, B
+        #     logProb_check = 0  
+        # else:
+        #     logProb_check += 1
+        if  1 > (oldLogProb - logProb) and (oldLogProb - logProb) > 0:
+            return A, B
+
+        # print(logProb_check)
         oldLogProb = logProb
-        scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(A, B, pi, O.copy())
+        scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(A, B, pi, O.copy(), [], [], [])
 
         scaled_beta_matrix = backward_algorithm_recursive(A, B, pi, O.copy(), scaling_vector.copy())
         
-        gamma_list, di_gamma_list  = di_gamma_algorithm(A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy())
+        gamma_list, di_gamma_list  = di_gamma_algorithm(A, B, O.copy(), scaled_alpha_matrix.copy(), scaled_beta_matrix.copy(), [], [])
+        
+        # print(pi)
+        # print(A)
+        # print(iters)
+        # print(sum(pi[0]))
         pi = re_estimate_pi(gamma_list)
         A = re_estimate_A(A, gamma_list, di_gamma_list)
         B = re_estimate_B(B, O, gamma_list, di_gamma_list)
-        print(pi)
-        print(A)
-        print(B)
+        
+        # print(A)
+        # print(B)
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
-        print(logProb, oldLogProb)
-    return pi, A, B
+        # print(oldLogProb - logProb)
+        # break
+        # print(iters)
+    return A, B
 
 def print_list(input_list:list)->str:
     return_list = [str(i) for i in input_list[::-1]]
     print( " ".join(return_list))
+
+def parse_matrix(matrix:list)->str:
+    rows = len(matrix)
+    columns = len(matrix[0])
+    list = [rows, columns] + [item for row in matrix for item in row]
+
+    print (' '.join(map(str, list)))
 
 def main():
     file_content = "".join([text for text in sys.stdin])
     A, B, pi, O = parse_input(file_content)
     # B = [int(element) for row in B for element in row]
     # print(find_model(pi, A, B, O, 100))
-    find_model(pi, A, B, O, 30)
-    # theta_list, theta_idx_list = viterbi_algorithm(A, B, pi, O)
-    # optimal_seq = viterbi_algorithm_optimal_sequence(theta_list, theta_idx_list)
-    # print(theta_list, theta_idx_list)
+    new_A, new_B = find_model(pi, A, B, O, 50)
+    parse_matrix(new_A)
+    parse_matrix(new_B)
+    
 
 if __name__ == "__main__":
     main()
