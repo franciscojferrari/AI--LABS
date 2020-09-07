@@ -27,15 +27,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HMM/exe4_pancho.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="291" lean-forward="true" selection-start-line="291" selection-end-line="291" />
+            <state relative-caret-position="473">
+              <caret line="249" column="22" selection-start-line="249" selection-start-column="22" selection-end-line="249" selection-end-column="22" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <element signature="e#182#721#0" />
-                <element signature="e#798#1275#0" />
-                <element signature="e#1335#1904#0" />
-                <element signature="e#1954#2746#0" />
-                <element signature="e#2794#2986#0" />
               </folding>
             </state>
           </provider>
@@ -54,8 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HMM/utlis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="79" selection-start-line="79" selection-end-line="123" selection-end-column="46" />
+            <state relative-caret-position="1523">
+              <caret line="123" column="46" selection-start-line="123" selection-start-column="46" selection-end-line="123" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -75,10 +70,10 @@
       <find>element_wise_multiplication_matrices</find>
       <find>inver</find>
       <find>.pop</find>
-      <find>print(</find>
       <find>re_estimate</find>
       <find>re_estimate_B</find>
       <find>foward_algorithm_recursive</find>
+      <find>print(</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -227,7 +222,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38856000" />
+    <option name="totallyTimeSpent" value="40152000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -240,7 +235,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1623" height="1027" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25932953" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -256,7 +250,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.3272727" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.30588236" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -337,22 +331,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HMM/utlis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="79" selection-start-line="79" selection-end-line="123" selection-end-column="46" />
+        <state relative-caret-position="1523">
+          <caret line="123" column="46" selection-start-line="123" selection-start-column="46" selection-end-line="123" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/HMM/exe4_pancho.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="291" lean-forward="true" selection-start-line="291" selection-end-line="291" />
+        <state relative-caret-position="473">
+          <caret line="249" column="22" selection-start-line="249" selection-start-column="22" selection-end-line="249" selection-end-column="22" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#182#721#0" />
-            <element signature="e#798#1275#0" />
-            <element signature="e#1335#1904#0" />
-            <element signature="e#1954#2746#0" />
-            <element signature="e#2794#2986#0" />
           </folding>
         </state>
       </provider>

@@ -127,17 +127,26 @@ def forward_algorithm_iterative(
     c0 = 1 / sum(alpha)
     alpha = [a * c0 for a in alpha]
     scaled_alpha_matrix.append(alpha)
+    scaling_vector.append(c0)
 
-    for emission in O[1:]:
-        alpha = elem_wise_product(
-            matrix_mulitplication([scaled_alpha_matrix[-1]], A)[0], b_t[emission]
-        )
-        ct = 1 / sum(alpha)
-        alpha = [a * ct for a in alpha]
-        scaling_vector.append(ct)
+    for t, emission in enumerate(O[1:]):
+        c_t = 0
+        alpha = []
+        for i in range(len(A)):
+            a_t = 0
+            for j in range(len(A)):
+                a_t += scaled_alpha_matrix[-1][j] * A[j][i]
+            a_t *= b_t[emission][i]
+            alpha.append(a_t)
+            c_t += a_t
+        scaling_vector.append(1/c_t)
+
+        alpha = [scaling_vector[-1]*alpha_t for alpha_t in alpha]
+        # print(alpha)
         scaled_alpha_matrix.append(alpha)
 
     return scaled_alpha_matrix, scaling_vector
+
 
 def foward_algorithm_recursive(
     A: List[List],
@@ -218,6 +227,7 @@ def di_gamma_algorithm_iterative(
 ) -> Tuple[List[List], List[List]]:
 
     gamma_list, di_gamma_list = [], []
+    print(A, B, O)
 
     for t, _ in enumerate(O[:-1]):
         di_gamma = []
@@ -237,6 +247,9 @@ def di_gamma_algorithm_iterative(
         gamma = [sum(row) for row in di_gamma]
 
         gamma_list.append(gamma)
+        print(di_gamma)
+        print(gamma)
+        raise ValueError
         di_gamma_list.append(di_gamma)
 
     gamma_list.append(scaled_alpha_matrix[-1])
@@ -290,10 +303,9 @@ def find_model(
     while iters < maxIters and logProb > oldLogProb:
         oldLogProb = logProb
 
-        scaled_alpha_matrix, scaling_vector = foward_algorithm_recursive(
-            A, B, pi, O, [], [], [], True
+        scaled_alpha_matrix, scaling_vector = forward_algorithm_iterative(
+            A, B, pi, O
         )
-        print(scaled_alpha_matrix[:3], scaling_vector[:3])
 
         scaled_beta_matrix = backward_algorithm_iterative(
             A, B, O, scaling_vector
