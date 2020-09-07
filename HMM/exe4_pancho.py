@@ -196,10 +196,10 @@ def backward_algorithm_recursive(
 def backward_algorithm_iterative(
     A: List[List],
     B: List[List],
-    O: list,
-    scaling_vector: list,
+    O: List,
+    scaling_vector: List,
     scaled_beta_matrix: List[List] = [],
-) -> float:
+) -> List[List]:
     bt_minus_1 = [scaling_vector[-1] for _ in A]
     scaled_beta_matrix.append(bt_minus_1)
 
@@ -225,18 +225,15 @@ def di_gamma_algorithm_iterative(
 
     gamma_list, di_gamma_list = [], []
 
-    for t, emission in enumerate(O[:-1]):
+    for t, _ in enumerate(O[:-1]):
         di_gamma = []
-
-        current_alpha = scaled_alpha_matrix[t]
-        current_betta = scaled_beta_matrix[t]
 
         for i, state in enumerate(A[0]):
             di_gamma.append([])
 
             for j, state in enumerate(A[0]):
                 di_gamma_temp = (
-                    current_alpha[i] * A[i][j] * B[j][emission] * current_betta[i]
+                        scaled_alpha_matrix[t][i] * A[i][j] * B[j][O[t+1]] * scaled_beta_matrix[t+1][i]
                 )
                 di_gamma[-1].append(di_gamma_temp)
 
@@ -248,43 +245,6 @@ def di_gamma_algorithm_iterative(
     gamma_list.append(scaled_alpha_matrix[-1])
 
     return gamma_list, di_gamma_list
-
-
-def di_gamma_algorithm(
-    A: List[List],
-    B: List[List],
-    O: List,
-    scaled_alpha_matrix: List[List],
-    scaled_beta_matrix: List[List],
-    gamma_list: List = [],
-    di_gamma_list: List = [],
-):
-
-    if len(O) == 1:
-        gamma_list.append(scaled_alpha_matrix[-1])
-        return gamma_list, di_gamma_list
-
-    else:
-        di_gamma = []
-        emmission_t = O.pop(0)
-        current_alpha = scaled_alpha_matrix.pop(0)
-        current_betta = scaled_beta_matrix.pop(0)
-        for i, state in enumerate(A[0]):
-            di_gamma.append([])
-
-            for j, state in enumerate(A[0]):
-                di_gamma_temp = (
-                    current_alpha[i] * A[i][j] * B[j][emmission_t] * current_betta[i]
-                )
-                di_gamma[-1].append(di_gamma_temp)
-        gamma = [sum(row) for row in di_gamma]
-
-        gamma_list.append(gamma)
-        di_gamma_list.append(di_gamma)
-
-        return di_gamma_algorithm(
-            A, B, O, scaled_alpha_matrix, scaled_beta_matrix, gamma_list, di_gamma_list
-        )
 
 
 def re_estimate_pi(gamma_list: List[List]) -> List:
