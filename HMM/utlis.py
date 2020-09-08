@@ -264,6 +264,13 @@ def random_inicialization(n:int, m:int):
         matrix.append([element/sum(row_temp) for element in row_temp])
     return matrix
 
+def uniform_random_inicialization(n:int, m:int):
+    matrix = []
+    for i in range(n):
+        row_temp = [random.uniform(9, 10) for _ in range(m)]
+        matrix.append([element/sum(row_temp) for element in row_temp])
+    return matrix
+
 def uniform_inicialization(n:int, m:int):
     return [[1/m for _ in range(m)] for _ in range(n)]
 
