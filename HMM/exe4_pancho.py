@@ -3,20 +3,6 @@ import math
 from typing import List, Tuple
 
 
-def elem_wise_product(vector_a: List, vector_b: List) -> List:
-    """Element-wise product between 2 vectors
-
-    Args:
-        vector_a (list): Vector A
-        vector_b (list): Vector C
-
-    Returns:
-        list: New vector with the result of the element-wise multiplication between A and B
-    """
-
-    return list(map(lambda x, y: x * y, vector_a, vector_b))
-
-
 def parse_input(input_value: str) -> List[List]:
     """Parse input string of HMM0 from kattis
 
@@ -79,7 +65,7 @@ def foward_algorithm(
         float: Sum of Alpha
     """
 
-    alpha = elem_wise_product(pi[0], T(B)[O[0]])
+    alpha = list(map(lambda x, y: x*y, pi[0], T(B)[O[0]]))
     c0 = 1 / sum(alpha)
     alpha = list(map(lambda x: x * c0, alpha))
 
@@ -89,8 +75,10 @@ def foward_algorithm(
     for t in range(1, len(O)):
         alpha = []
         ct = 0
+
         for i in range(len(A)):
             alpha_temp = 0
+
             for j in range(len(A)):
                 alpha_temp += scaled_alpha_matrix[t - 1][j] * A[j][i]
             alpha_temp = alpha_temp * B[i][O[t]]
@@ -116,8 +104,10 @@ def backward_algorithm(
 
     for t, emission in reversed(list(enumerate(O[:-1]))):
         beta = []
+
         for i in range(len(A)):
             beta_temp = 0
+
             for j in range(len(A)):
                 beta_temp += A[i][j] * B[j][O[t + 1]] * scaled_beta_matrix[0][j]
             beta_temp = beta_temp * scaling_vector[t]
@@ -135,23 +125,25 @@ def di_gamma_algorithm(
     gamma_list: List = [],
     di_gamma_list: List = [],
 ) -> Tuple[List[List], List[List]]:
+
     for t in range(len(O[:-1])):
-        di_gamma = []
-        for i in range(len(A)):
-            di_gamma.append([])
+        di_gamma = [[] for _ in A]
+
+        for i, a_row in enumerate(A):
             for j in range(len(A)):
                 di_gamma_temp = (
                     scaled_alpha_matrix[t][i]
-                    * A[i][j]
+                    * a_row[j]
                     * B[j][O[t + 1]]
                     * scaled_beta_matrix[t + 1][j]
                 )
-                di_gamma[-1].append(di_gamma_temp)
+                di_gamma[i].append(di_gamma_temp)
         gamma = [sum(row) for row in di_gamma]
         gamma_list.append(gamma)
         di_gamma_list.append(di_gamma)
 
     gamma_list.append(scaled_alpha_matrix[-1])
+
     return gamma_list, di_gamma_list
 
 
@@ -163,12 +155,15 @@ def re_estimate_A(
     A: List[List], gamma_list: List[List], di_gamma_list: List[List]
 ) -> List[List]:
     re_estimated_A = []
+
     for i in range(len(A)):
         re_estimated_A.append([])
         denom = sum([row[i] for row in gamma_list[:-1]])
+
         for j in range(len(A)):
             number = sum([matrix[i][j] for matrix in di_gamma_list])
             re_estimated_A[i].append(number / denom)
+
     return re_estimated_A
 
 
@@ -183,24 +178,26 @@ def re_estimate_B(B: List[List], O: List, gamma_list: List[List]) -> List[List]:
                 [vector[i] for t, vector in enumerate(gamma_list) if O[t] == j]
             )
             re_estimated_B[i].append(number / denom)
+
     return re_estimated_B
 
 
 def log_PO_given_lambda(scaling_vector: List) -> float:
+
     return -sum([math.log(ci) for ci in scaling_vector])
 
 
-def find_model(
+def baum_welch(
     A: List[List], B: List[List], pi: List, O: List, maxIters: int
 ) -> Tuple[List[List], List[List]]:
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while iters < maxIters and logProb > oldLogProb:
+    while iters < maxIters and logProb > oldLogProb and logProb - oldLogProb > 0.01:
         oldLogProb = logProb
-        scaled_alpha_matrix, scaling_vector = foward_algorithm(A, B, pi, O, [], [])
 
+        scaled_alpha_matrix, scaling_vector = foward_algorithm(A, B, pi, O, [], [])
         scaled_beta_matrix = backward_algorithm(A, B, O, scaling_vector, [])
 
         gamma_list, di_gamma_list = di_gamma_algorithm(
@@ -213,6 +210,7 @@ def find_model(
 
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
+
     return A, B
 
 
@@ -233,7 +231,7 @@ def main():
     file_content = "".join([text for text in sys.stdin])
     A, B, pi, O = parse_input(file_content)
 
-    new_A, new_B = find_model(A, B, pi, O, 30)
+    new_A, new_B = baum_welch(A, B, pi, O, 30)
     parse_matrix(new_A)
     parse_matrix(new_B)
 
