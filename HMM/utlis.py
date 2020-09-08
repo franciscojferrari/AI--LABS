@@ -215,14 +215,14 @@ def baum_welch(
 
 
 def baum_welch_exp(
-    A: List[List], B: List[List], pi: List, O: List, maxIters: int
+    A: List[List], B: List[List], pi: List, O: List, maxIters: int = 1000
 ) -> Tuple[List[List], List[List]]:
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
     logprobs = []
 
-    while iters < maxIters and logProb > oldLogProb and logProb - oldLogProb > 0.01:
+    while iters < maxIters and logProb > oldLogProb and logProb - oldLogProb > 0.005:
         LOGGER.info("Iteration nr: %s.", iters)
         logprobs.append(logProb)
         oldLogProb = logProb
