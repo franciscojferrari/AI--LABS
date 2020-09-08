@@ -1,6 +1,7 @@
 import math
 import logging
 from typing import List, Tuple
+import random as random
 
 LOGGER = logging.getLogger(__name__)
 
@@ -194,7 +195,7 @@ def baum_welch(
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while iters < maxIters and logProb > oldLogProb and logProb - oldLogProb > 0.01:
+    while iters < maxIters and logProb > oldLogProb:
         oldLogProb = logProb
 
         scaled_alpha_matrix, scaling_vector = forward_algorithm(A, B, pi, O, [], [])
@@ -211,19 +212,19 @@ def baum_welch(
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
 
-    return A, B
+    return A, B, pi
 
 
 def baum_welch_exp(
-    A: List[List], B: List[List], pi: List, O: List, maxIters: int = 1000
+    A: List[List], B: List[List], pi: List, O: List, maxIters: int = 4000
 ) -> Tuple[List[List], List[List]]:
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
     logprobs = []
 
-    while iters < maxIters and logProb > oldLogProb and logProb - oldLogProb > 0.005:
-        LOGGER.info("Iteration nr: %s.", iters)
+    while iters < maxIters and logProb > oldLogProb:
+        
         logprobs.append(logProb)
         oldLogProb = logProb
 
@@ -255,3 +256,33 @@ def parse_matrix(matrix: List) -> str:
     list = [rows, columns] + [item for row in matrix for item in row]
 
     print(" ".join(map(str, list)))
+
+def random_inicialization(n:int, m:int):
+    matrix = []
+    for i in range(n):
+        row_temp = [random.random() for _ in range(m)]
+        matrix.append([element/sum(row_temp) for element in row_temp])
+    return matrix
+
+def uniform_inicialization(n:int, m:int):
+    return [[1/m for _ in range(m)] for _ in range(n)]
+
+def count_based_inicialization(n:int, m:int, same_state_probability:float = 0.8):
+    matrix = []
+    for i in range(n):
+        matrix.append([])
+        for j in range(m):
+            if i==j:
+                matrix[-1].append(same_state_probability)
+            else:
+                matrix[-1].append((1-same_state_probability)/(m-1))
+    return matrix
+
+def euclidean_distance(mat_a, mat_b):
+    col = len(mat_a[0])
+
+    values = [math.pow((a - b), 2) for row_a, row_b in zip(mat_a, mat_b) for a, b in zip(row_a, row_b)]
+    result = math.sqrt(sum(values)/len(mat_a))
+
+    return result
+
