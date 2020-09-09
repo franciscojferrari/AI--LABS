@@ -69,7 +69,7 @@ def q8():
     pi = uniform_random_inicialization(1, 3)
     # print(pi)
     # print(euclidean_distance(A, _A))
-    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 10000)
 
     print(A_new)
     print(B_new)

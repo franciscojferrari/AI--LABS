@@ -57,11 +57,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HMM/utlis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="266" selection-start-line="266" selection-end-line="271" selection-end-column="17" />
+            <state relative-caret-position="236">
+              <caret line="197" column="93" selection-start-line="197" selection-start-column="93" selection-end-line="197" selection-end-column="93" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -69,11 +69,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HMM/baum_welch_experiments.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="69" selection-start-line="69" selection-end-line="69" />
+            <state relative-caret-position="294">
+              <caret line="71" column="37" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="37" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -122,8 +122,8 @@
         <option value="$PROJECT_DIR$/HMM/exe4_seb.py" />
         <option value="$PROJECT_DIR$/HMM/exe4_pancho.py" />
         <option value="$PROJECT_DIR$/HMM/q7_input.in" />
-        <option value="$PROJECT_DIR$/HMM/utlis.py" />
         <option value="$PROJECT_DIR$/HMM/baum_welch_experiments.py" />
+        <option value="$PROJECT_DIR$/HMM/utlis.py" />
       </list>
     </option>
   </component>
@@ -274,12 +274,12 @@
       <updated>1599056196349</updated>
       <workItem from="1599056197583" duration="4245000" />
       <workItem from="1599118457553" duration="33763000" />
-      <workItem from="1599549925059" duration="8202000" />
+      <workItem from="1599549925059" duration="9906000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53881000" />
+    <option name="totallyTimeSpent" value="55585000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -292,6 +292,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1623" height="1027" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2624921" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -307,7 +308,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.72727275" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.4171123" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -417,22 +418,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HMM/utlis.py">
+    <entry file="file://$PROJECT_DIR$/HMM/baum_welch_experiments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="266" selection-start-line="266" selection-end-line="271" selection-end-column="17" />
+        <state relative-caret-position="294">
+          <caret line="71" column="37" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="37" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HMM/baum_welch_experiments.py">
+    <entry file="file://$PROJECT_DIR$/HMM/utlis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="69" selection-start-line="69" selection-end-line="69" />
+        <state relative-caret-position="236">
+          <caret line="197" column="93" selection-start-line="197" selection-start-column="93" selection-end-line="197" selection-end-column="93" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>

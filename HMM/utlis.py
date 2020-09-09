@@ -195,8 +195,10 @@ def baum_welch(
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while iters < maxIters and logProb > oldLogProb:
+    while iters < maxIters and logProb > oldLogProb and abs(oldLogProb - logProb) > 0.000000005:
+        # print(oldLogProb - logProb)
         oldLogProb = logProb
+
 
         scaled_alpha_matrix, scaling_vector = forward_algorithm(A, B, pi, O, [], [])
         scaled_beta_matrix = backward_algorithm(A, B, O, scaling_vector, [])
