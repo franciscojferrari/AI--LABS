@@ -304,7 +304,7 @@ def uniform_random_inicialization(n:int, m:int):
 
 def diagonal_matrix(n:int):
     matrix = []
-    for i in range(n):
+    for i in range(n): 
         matrix.append([1 if j==i else 0 for j in range(n)])
 
 def uniform_inicialization(n:int, m:int):
