@@ -10,16 +10,32 @@ from utlis import (
     euclidean_distance,
     uniform_random_inicialization,
     foward_algorithm_prob,
-    forward_algorithm,
-    diagonal_matrix
+    forward_algorithm
 )
-from sklearn.metrics.pairwise import cosine_similarity
+# from utlis import pretty_print_matrix
+
+import numpy as np
 import matplotlib.pyplot as plt
 from random import randrange
 from statistics import mean
 
 
 LOGGER = logging.getLogger(__name__)
+
+def pretty_print_matrix(mat):
+
+    s = [[str(e) for e in row] for row in mat]
+    lens = [max(map(len, col)) for col in zip(*s)]
+    fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
+    table = [fmt.format(*row) for row in s]
+    print('\n'.join(table))
+
+def diagonal_matrix(n:int):
+    matrix = []
+    for i in range(n):
+        matrix.append([1 if j == i else 0 for j in range(n)])
+
+    return matrix
 
 
 def main():
@@ -39,76 +55,157 @@ def main():
 
             num = randrange(len(O) - i)
 
-            A_new, B_new, logprobs, max_iter = baum_welch_exp(
+            A_new, B_new, logprobs, max_iter, pi_new = baum_welch_exp(
                 A, B, pi, O[num : num + i]
             )
-            cos_sim_a = cosine_similarity(A_new, A)
-            cos_sim_a = mean([j for i in cos_sim_a for j in i])
-            cos_sim_b = cosine_similarity(B_new, B)
-            cos_sim_b = mean([j for i in cos_sim_b for j in i])
+            print(f"A_new: {A_new}")
+            print(f"A: {A}")
+            print(f"pi_new: {pi_new}")
+            print(f"pi:  {pi}")
+
             logprob[-1].append(logprobs)
             iterations[-1].append(max_iter)
-            cos_sim_a_list[-1].append(cos_sim_a)
-            cos_sim_b_list[-1].append(cos_sim_b)
+
 
     iterations = [mean(iter_list) for iter_list in iterations]
     plt.plot([i for i in range(100, 901, 50)], iterations)
-    plt.show()
-
-    cos_sim_a_list = [mean(iter_list) for iter_list in cos_sim_a_list]
-    plt.plot([i for i in range(100, 901, 50)], cos_sim_a_list)
-    plt.show()
-
-    cos_sim_b_list = [mean(iter_list) for iter_list in cos_sim_b_list]
-    plt.plot([i for i in range(100, 901, 50)], cos_sim_b_list)
     plt.show()
 
 
 def q8():
     _A, _B, _pi, O = parse_input(file_content)
 
-    A = random_inicialization(3, 3)
-    B = random_inicialization(3, 4)
+    A = count_based_inicialization(3, 3, 0.7)
+    print(f"A: {A}")
+    B = count_based_inicialization(3, 4, 0.7)
+    print(f"b: {B}")
     pi = uniform_random_inicialization(1, 3)
-    # print(pi)
-    # print(euclidean_distance(A, _A))
-    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 100)
-
-    print(A_new)
-    print(B_new)
-    print(pi_new)
-    # print(foward_algorithm_prob(_A, _B, _pi, O))
-    # foward_algorithm_prob(_A, _B, _pi, O)
-    # foward_algorithm_prob(A, B, pi, O)
-    # foward_algorithm_prob(A_new, B_new, pi_new, O)
-    # print(foward_algorithm_prob(A_new, B_new, pi_new, O))
-
-    # scaled_alpha_matrix, scaling_vector = forward_algorithm(A_new, B_new, pi_new, O, [], [])
-    # print(scaled_alpha_matrix[-1])
-    # print(scaling_vector[-1])
-    # print("----")
-    # print(sum(scaled_alpha_matrix[-1])/scaling_vector[-1])
-
-    # print(euclidean_distance(A_new, _A))
-
-def q9():
-    _A, _B, _pi, O = parse_input(file_content)
-    print(diagonal_matrix)
-    A = random_inicialization(5, 5)
-    B = random_inicialization(5, 4)
-    pi = uniform_random_inicialization(1, 5)
- 
-    print(A)
-    print(B)
-    print(pi)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
-    print(A_new)
-    print(B_new)
-    print(pi_new)
+    print(f"A_new: {np.matrix(A_new)}")
+    # print(f"A: {_A}")
+    print(f"B_new: {np.matrix(B_new)}")
+    # print(f"A: {_B}")
+    print(f"pi_new: {np.matrix(pi_new)}")
+    # print(f"pi:  {_pi}")
 
-    # print(euclidean_distance(A_new, _A))
+    # print(foward_algorithm_prob(A, B, pi, O))
+
+
+def q9():
+    _A, _B, _pi, O = parse_input(file_content)
+
+    #  experiment with 7 states
+    print("\nExperiment  with 7 states:")
+    A = uniform_random_inicialization(7, 7)
+    B = uniform_random_inicialization(7, 4)
+    pi = uniform_random_inicialization(1, 7)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+    #  experiment with  6 states
+    print("\nExperiment  with 6 states:")
+    A = uniform_random_inicialization(6, 6)
+    B = uniform_random_inicialization(6, 4)
+    pi = uniform_random_inicialization(1, 6)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+    #  experiment with  5 states
+    print("\nExperiment  with 5 states:")
+    A = uniform_random_inicialization(5, 5)
+    B = uniform_random_inicialization(5, 4)
+    pi = uniform_random_inicialization(1, 5)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+    #  experiment with 4 states
+    print("\nExperiment  with 4 states:")
+    A = uniform_random_inicialization(4, 4)
+    B = uniform_random_inicialization(4, 4)
+    pi = uniform_random_inicialization(1, 4)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+    #  experiment with 3 states
+    print("\nExperiment  with 3 states:")
+    A = uniform_random_inicialization(3, 3)
+    B = uniform_random_inicialization(3, 4)
+    pi = uniform_random_inicialization(1, 3)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+    #  experiment with 2 states
+    print("\nExperiment  with 2 states:")
+    A = uniform_random_inicialization(2, 2)
+    B = uniform_random_inicialization(2, 4)
+    pi = uniform_random_inicialization(1, 2)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+
+def q10():
+    _A, _B, _pi, O = parse_input(file_content)
+    #  experiment with 3 states
+    print("\nExperiment  with 3 states:")
+    A = diagonal_matrix(3)
+    B = uniform_random_inicialization(3, 4)
+    pi = [[0, 0, 1]]
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
+
+    print(f"A_new")
+    pretty_print_matrix(A_new)
+    print(f"B_new")
+    pretty_print_matrix(B_new)
+    print(f"pi_new")
+    pretty_print_matrix(pi_new)
+
+
+
 
 if __name__ == "__main__":
     file_content = "".join([text for text in sys.stdin])
@@ -118,4 +215,4 @@ if __name__ == "__main__":
         format="%(asctime)s %(name)-4s: %(module)-4s :%(levelname)-8s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    q9()
+    q10()

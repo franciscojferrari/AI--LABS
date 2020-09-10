@@ -75,7 +75,7 @@ def foward_algorithm_prob (A:list, B:list, pi:list, O:list, stop_step:int=-1) ->
                 alpha = elem_wise_product( matrix_mulitplication([alpha], A)[0], T(B)[emission])
         alpha_list.append(sum(alpha))
 
-    return max(alpha_list)
+    return mean(alpha_list)
 
 
 def forward_algorithm(
@@ -282,7 +282,7 @@ def baum_welch_exp(
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
 
-    return A, B, logprobs[1:], iters
+    return A, B, logprobs[1:], iters,  pi
 
 
 def print_list(input_list: List) -> str:
@@ -297,12 +297,23 @@ def parse_matrix(matrix: List) -> str:
 
     print(" ".join(map(str, list)))
 
+
 def random_inicialization(n:int, m:int):
     matrix = []
     for i in range(n):
         row_temp = [random.random() for _ in range(m)]
         matrix.append([element/sum(row_temp) for element in row_temp])
     return matrix
+
+def diagonal_matrix(n:int):
+    print('a')
+    matrix = []
+    for i in range(n):
+        print(i)
+        matrix.append([1 if j == i else 0 for j in range(n)])
+
+    return matrix
+
 
 def uniform_random_inicialization(n:int, m:int):
     matrix = []
@@ -311,19 +322,43 @@ def uniform_random_inicialization(n:int, m:int):
         matrix.append([element/sum(row_temp) for element in row_temp])
     return matrix
 
-def uniform_inicialization(n:int, m:int):
+
+def uniform_inicialization(n: int, m: int):
     return [[1/m for _ in range(m)] for _ in range(n)]
 
-def count_based_inicialization(n:int, m:int, same_state_probability:float = 0.8):
+
+def count_based_inicialization(n: int, m: int, same_state_probability: float = 0.7):
     matrix = []
     for i in range(n):
         matrix.append([])
         for j in range(m):
-            if i==j:
+            if i == j:
                 matrix[-1].append(same_state_probability)
             else:
                 matrix[-1].append((1-same_state_probability)/(m-1))
     return matrix
+
+
+# def random_count_based_inicialization(n:int, m:int, same_state_probability:float = 0.7):
+#     matrix = []
+#     for i in range(n):
+#         matrix.append([])
+#         row_temp = [random.uniform(9, 10) for _ in range(m-1)]
+#         for j in range(m):
+#             if i==j:
+#                 matrix[-1].append(same_state_probability / sum(row_temp + same_state_probability))
+#             else:
+#                 [element / sum(row_temp + ) for element in row_temp]
+#                 matrix[-1].append((1-same_state_probability)/(m-1))
+#     return matrix
+
+def pretty_print_matrix(mat: List[List]):
+
+    s = [[str(e) for e in row] for row in mat]
+    lens = [max(map(len, col)) for col in zip(*s)]
+    fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
+    table = [fmt.format(*row) for row in s]
+    print('\n'.join(table))
 
 def euclidean_distance(mat_a, mat_b):
     col = len(mat_a[0])
