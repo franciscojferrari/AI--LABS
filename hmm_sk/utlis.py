@@ -2,6 +2,8 @@ import math
 import logging
 from typing import List, Tuple
 import random as random
+from random import randrange
+from statistics import mean
 
 LOGGER = logging.getLogger(__name__)
 
@@ -61,18 +63,20 @@ def parse_input(input_value: str) -> List[List]:
                 )
     return matrixes
 
-def foward_algorithm_prob (A:list, B:list, pi:list, O:list) -> float:
-    for index, emission in enumerate(O):
-        if index == 0:
-            alpha = elem_wise_product(pi[0], T(B)[emission])
+def foward_algorithm_prob (A:list, B:list, pi:list, O:list, stop_step:int=-1) -> float:
+    alpha_list = []
+    for _ in range(10):
+        num = randrange(len(O) - stop_step)
+        new_O = O[num:num+stop_step]
+        for index, emission in enumerate(new_O):
+            if index == 0:
+                alpha = elem_wise_product(pi[0], T(B)[emission])
+            else:
+                alpha = elem_wise_product( matrix_mulitplication([alpha], A)[0], T(B)[emission])
+        alpha_list.append(sum(alpha))
 
-        else:
-            if index == 15:
-                print(alpha)
-                print(sum(alpha))
-            alpha =elem_wise_product( matrix_mulitplication([alpha], A)[0], T(B)[emission])
-    
-    return sum(alpha)
+    return max(alpha_list)
+
 
 def forward_algorithm(
     A: List[List],
@@ -97,7 +101,12 @@ def forward_algorithm(
     """
 
     alpha = list(map(lambda x, y: x*y, pi[0], T(B)[O[0]]))
-    c0 = 1 / sum(alpha)
+    try:
+        c0 = 1 / sum(alpha)
+    except:
+        print(pi[0], T(B)[O[0]])
+        print(alpha)
+    
     alpha = list(map(lambda x: x * c0, alpha))
 
     scaling_vector.append(c0)
@@ -213,8 +222,8 @@ def re_estimate_B(B: List[List], O: List, gamma_list: List[List]) -> List[List]:
     return re_estimated_B
 
 
-def log_PO_given_lambda(scaling_vector: List) -> float:
 
+def log_PO_given_lambda(scaling_vector: List) -> float:
     return -sum([math.log(ci) for ci in scaling_vector])
 
 def baum_welch(
@@ -242,7 +251,7 @@ def baum_welch(
 
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
-    print(iters)
+
     return A, B, pi
 
 
@@ -301,11 +310,6 @@ def uniform_random_inicialization(n:int, m:int):
         row_temp = [random.uniform(9, 10) for _ in range(m)]
         matrix.append([element/sum(row_temp) for element in row_temp])
     return matrix
-
-def diagonal_matrix(n:int):
-    matrix = []
-    for i in range(n):
-        matrix.append([1 if j==i else 0 for j in range(n)])
 
 def uniform_inicialization(n:int, m:int):
     return [[1/m for _ in range(m)] for _ in range(n)]

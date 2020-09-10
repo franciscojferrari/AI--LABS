@@ -9,6 +9,9 @@ from utlis import (
     uniform_inicialization,
     euclidean_distance,
     uniform_random_inicialization,
+    foward_algorithm_prob,
+    forward_algorithm,
+    diagonal_matrix
 )
 from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
@@ -64,19 +67,48 @@ def main():
 def q8():
     _A, _B, _pi, O = parse_input(file_content)
 
-    A = uniform_random_inicialization(3, 3)
-    B = uniform_random_inicialization(3, 4)
+    A = random_inicialization(3, 3)
+    B = random_inicialization(3, 4)
     pi = uniform_random_inicialization(1, 3)
     # print(pi)
     # print(euclidean_distance(A, _A))
-    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 10000)
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 100)
+
+    print(A_new)
+    print(B_new)
+    print(pi_new)
+    # print(foward_algorithm_prob(_A, _B, _pi, O))
+    # foward_algorithm_prob(_A, _B, _pi, O)
+    # foward_algorithm_prob(A, B, pi, O)
+    # foward_algorithm_prob(A_new, B_new, pi_new, O)
+    # print(foward_algorithm_prob(A_new, B_new, pi_new, O))
+
+    # scaled_alpha_matrix, scaling_vector = forward_algorithm(A_new, B_new, pi_new, O, [], [])
+    # print(scaled_alpha_matrix[-1])
+    # print(scaling_vector[-1])
+    # print("----")
+    # print(sum(scaled_alpha_matrix[-1])/scaling_vector[-1])
+
+    # print(euclidean_distance(A_new, _A))
+
+def q9():
+    _A, _B, _pi, O = parse_input(file_content)
+    print(diagonal_matrix)
+    A = random_inicialization(5, 5)
+    B = random_inicialization(5, 4)
+    pi = uniform_random_inicialization(1, 5)
+ 
+    print(A)
+    print(B)
+    print(pi)
+
+    A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
     print(A_new)
     print(B_new)
     print(pi_new)
 
     # print(euclidean_distance(A_new, _A))
-
 
 if __name__ == "__main__":
     file_content = "".join([text for text in sys.stdin])
@@ -86,4 +118,4 @@ if __name__ == "__main__":
         format="%(asctime)s %(name)-4s: %(module)-4s :%(levelname)-8s %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    q8()
+    q9()
