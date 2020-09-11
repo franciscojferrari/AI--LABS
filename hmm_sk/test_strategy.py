@@ -129,12 +129,12 @@ for fish_type, sequence in zip(fish_types, sequences):
             if best_model  == None:
                 print("training first model")
                 model = HMM(2, 8)
-                model.train_model(sequence[:120], iterations=30)
+                model.train_model(sequence[:90], iterations=30)
                 best_model = model
             else:
                 model = HMM(2, 8)
                 model.set_matrices(best_model.A, best_model.B, best_model.pi)
-                model.train_model(sequence[:120], iterations=30)
+                model.train_model(sequence[:90], iterations=30)
 
                 if model.log > best_model.log:
                     print("new model is better")
