@@ -20,6 +20,7 @@ from random import randrange
 from statistics import mean
 
 LOGGER = logging.getLogger(__name__)
+STEPS = 102
 
 
 def T(matrix: List[List]) -> List[List]:
@@ -421,9 +422,15 @@ class ModelVault:
         self.trained_models = []
 
     def train_init_models(self, data_vault):
+        counter = 0
+        print("training")
         for fish_type, model in self.models.items():
+            if counter >0:
+                break
             if not model["model"]:
                 self.train_and_store_model(fish_type, data_vault.get_fish_observations(self.labels[int(fish_type)]))
+                counter+=1
+            
 
     def train_and_store_model(self, fish_type, sequence):
         best_model = None
@@ -465,12 +472,14 @@ class GuessingMachine:
         self.labels = {i: None for i in range(7)}
         self.correct_fish = 0
 
+
     def populate_fish_ids(self, nr_fish):
         """Need to know the number of fish in the game"""
         self.fish_ids = [i for i in range(nr_fish)]
 
     def what_to_guess(self):
-        fish_type = random.choice(self.fish_types)
+        # fish_type = random.choice(self.fish_types)
+        fish_type = random.randint(0,6)
         fish_id = random.choice(self.fish_ids)
         return fish_id, fish_type
 
@@ -597,9 +606,9 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
                     self.model_vault.set_labels(self.labels)
                     self.data_vault.set_fish_ids(self.guess_machine.fish_ids)
 
-        elif 90 < step < 100:
+        elif STEPS < step < STEPS+8:
             self.model_vault.train_init_models(self.data_vault)
-        elif step > 100:
+        elif step >= STEPS+8:
             fish_id = self.data_vault.pop_fish_id()
             pred = self.model_vault.predict(fish_id,  self.data_vault)
 
