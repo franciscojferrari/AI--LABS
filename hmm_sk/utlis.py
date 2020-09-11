@@ -75,7 +75,7 @@ def foward_algorithm_prob (A:list, B:list, pi:list, O:list, stop_step:int=-1) ->
                 alpha = elem_wise_product( matrix_mulitplication([alpha], A)[0], T(B)[emission])
         alpha_list.append(sum(alpha))
 
-    return mean(alpha_list)
+    return max(alpha_list)
 
 
 def forward_algorithm(
@@ -252,7 +252,7 @@ def baum_welch(
         logProb = log_PO_given_lambda(scaling_vector)
         iters += 1
 
-    return A, B, pi
+    return A, B, pi, oldLogProb
 
 
 def baum_welch_exp(
