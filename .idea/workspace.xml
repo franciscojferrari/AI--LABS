@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hmm_sk/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/player.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hmm_sk/utlis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1057">
-              <caret line="80" column="21" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="21" />
+            <state relative-caret-position="354">
+              <caret line="363" column="23" lean-forward="true" selection-end-line="370" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -41,8 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="84" column="9" lean-forward="true" selection-end-line="249" />
+            <state relative-caret-position="486">
+              <caret line="601" lean-forward="true" selection-start-line="601" selection-end-line="601" />
               <folding>
                 <element signature="e#24#85#0" expanded="true" />
               </folding>
@@ -53,11 +54,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="149" selection-start-line="149" selection-end-line="160" selection-end-column="49" />
+            <state relative-caret-position="455">
+              <caret line="117" column="37" lean-forward="true" selection-start-line="117" selection-start-column="37" selection-end-line="117" selection-end-column="37" />
               <folding>
                 <element signature="e#0#179#0" expanded="true" />
-                <element signature="e#485#3071#0" />
               </folding>
             </state>
           </provider>
@@ -102,7 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.pop</find>
       <find>re_estimate</find>
       <find>foward_algorithm_recursive</find>
       <find>elem_wise_product_matrix</find>
@@ -126,12 +125,13 @@
       <find>foward_algorithm</find>
       <find>populate_fish_ids</find>
       <find>get_fish_observations</find>
-      <find>foward</find>
-      <find>forward_algorithm</find>
-      <find>train_init_models</find>
       <find>print(</find>
       <find>run_inference</find>
       <find>print</find>
+      <find>forward_algorithm</find>
+      <find>train_init_models</find>
+      <find>foward</find>
+      <find>train_model</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -326,12 +326,12 @@
       <updated>1599056196349</updated>
       <workItem from="1599056197583" duration="4245000" />
       <workItem from="1599118457553" duration="33763000" />
-      <workItem from="1599549925059" duration="46248000" />
+      <workItem from="1599549925059" duration="48910000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91927000" />
+    <option name="totallyTimeSpent" value="94589000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -344,7 +344,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="58" y="23" width="1623" height="1027" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.200506" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -360,7 +359,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.33262032" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.22566845" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.65989304" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -585,31 +584,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="149" selection-start-line="149" selection-end-line="160" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#179#0" expanded="true" />
-            <element signature="e#485#3071#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/utlis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1057">
-          <caret line="80" column="21" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="21" />
+        <state relative-caret-position="354">
+          <caret line="363" column="23" lean-forward="true" selection-end-line="370" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="117" column="37" lean-forward="true" selection-start-line="117" selection-start-column="37" selection-end-line="117" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#179#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="84" column="9" lean-forward="true" selection-end-line="249" />
+        <state relative-caret-position="486">
+          <caret line="601" lean-forward="true" selection-start-line="601" selection-end-line="601" />
           <folding>
             <element signature="e#24#85#0" expanded="true" />
           </folding>

@@ -357,19 +357,6 @@ def count_based_inicialization(n: int, m: int, same_state_probability: float = 0
     return matrix
 
 
-# def random_count_based_inicialization(n:int, m:int, same_state_probability:float = 0.7):
-#     matrix = []
-#     for i in range(n):
-#         matrix.append([])
-#         row_temp = [random.uniform(9, 10) for _ in range(m-1)]
-#         for j in range(m):
-#             if i==j:
-#                 matrix[-1].append(same_state_probability / sum(row_temp + same_state_probability))
-#             else:
-#                 [element / sum(row_temp + ) for element in row_temp]
-#                 matrix[-1].append((1-same_state_probability)/(m-1))
-#     return matrix
-
 def pretty_print_matrix(mat: List[List]):
     s = [[str(e) for e in row] for row in mat]
     lens = [max(map(len, col)) for col in zip(*s)]
@@ -386,6 +373,10 @@ def euclidean_distance(mat_a, mat_b):
     result = math.sqrt(sum(values) / len(mat_a))
 
     return result
+
+NR_STATES = 2
+INIT_STRATEGY = "default"
+TRAIN_ITERATIONS = 50
 
 
 class DataVault:
@@ -422,27 +413,26 @@ class ModelVault:
         self.trained_models = []
 
     def train_init_models(self, data_vault):
-        counter = 0
-        print("training")
+        count = 0
         for fish_type, model in self.models.items():
-            if counter >0:
+            if count > 0:
                 break
             if not model["model"]:
                 self.train_and_store_model(fish_type, data_vault.get_fish_observations(self.labels[int(fish_type)]))
-                counter+=1
-            
+                count += 1
+
 
     def train_and_store_model(self, fish_type, sequence):
         best_model = None
         for _ in range(self.nr_of_models_to_train):
             if best_model == None:
-                model = HMM(2, 8)
-                model.train_model(sequence[:90], iterations=30)
+                model = HMM(NR_STATES, 8)
+                model.train_model(sequence, iterations=TRAIN_ITERATIONS)
                 best_model = model
             else:
-                model = HMM(2, 8)
+                model = HMM(NR_STATES, 8)
                 model.set_matrices(best_model.A, best_model.B, best_model.pi)
-                model.train_model(sequence[:90], iterations=30)
+                model.train_model(sequence, iterations=TRAIN_ITERATIONS)
 
                 if model.log > best_model.log:
                     best_model = model
@@ -451,8 +441,6 @@ class ModelVault:
     def set_labels(self, labels):
         self.labels = labels
 
-    # def print_models(self):
-    #     print(self.models)
 
     def predict(self, fish_id,  data_vault):
         sequence = data_vault.get_fish_observations(fish_id)
@@ -543,7 +531,7 @@ class HMM:
             self.pi = uniform_random_inicialization(1, self.nr_states)
 
     def train_model(self, O, iterations=500):
-        self.initialize_model("default", O)
+        self.initialize_model(INIT_STRATEGY, O)
         self.A, self.B, self.pi, self.log = baum_welch(
             self.A, self.B, self.pi, O, iterations
         )
@@ -552,7 +540,7 @@ class HMM:
         """Check if oberservation sequence is likely to be produced by the model
         TODO:  Change  to  forward_algorithm"""
         return foward_algorithm_prob(
-            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 50
+            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 30
         )
 
         # _, scaling_vector = forward_algorithm(
