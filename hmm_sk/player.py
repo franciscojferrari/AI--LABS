@@ -412,7 +412,7 @@ class DataVault:
     def pop_fish_id(self):
         return self.fish_ids.pop(0)
 
-    def process_guess(self, _, fish_id, true_type):
+    def process_guess(self, fish_id, true_type):
         if true_type not in self.labels:
             self.labels[true_type] = fish_id
 
@@ -423,7 +423,7 @@ class ModelVault:
         self.models = {f"{i}": {"model": None} for i in range(7)}
         self.nr_of_models_to_train = nr_of_models_to_train
         self.trained_models = []
-        self.model_split = [["0", "1", "2"], ["3", "4", "5", "6"]]
+        self.model_split = [[0, 1, 2], [3, 4, 5, 6]]
         self.model_split_id = 0
 
     def train_init_models(self, data_vault, fish_type, fish_id):
@@ -471,7 +471,7 @@ class ModelVault:
             for model_id in self.model_split[self.model_split_id]:
                 fish_id = data_vault.get_labels()[model_id]
                 self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
-            self.model_split_id = 0
+            self.model_split_id = 2
 
 
 class HMM:
@@ -524,7 +524,7 @@ class HMM:
         """Check if oberservation sequence is likely to be produced by the model
         TODO:  Change  to  forward_algorithm"""
         return foward_algorithm_prob(
-            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 50
+            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 60
         )
 
         # _, scaling_vector = forward_algorithm(
@@ -588,10 +588,14 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param true_type: the correct type of the fish
         :return:
         """
-        if self.step == 1:
+        self.data_vault.process_guess(fish_id, true_type)
+        if self.step == 110:
             self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
-        else:
+        elif len(self.data_vault.get_labels()) < 7:
             if true_type not in self.data_vault.get_labels():
                 self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
+        else:    
+            if self.step > 130:
+                self.model_vault.retrain_models(self.data_vault)
 
 
