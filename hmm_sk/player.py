@@ -471,7 +471,7 @@ class ModelVault:
             for model_id in self.model_split[self.model_split_id]:
                 fish_id = data_vault.get_labels()[model_id]
                 self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
-            self.model_split_id = 2
+            self.model_split_id = 0
 
 
 class HMM:
@@ -588,14 +588,18 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param true_type: the correct type of the fish
         :return:
         """
-        self.data_vault.process_guess(fish_id, true_type)
+        
         if self.step == 110:
             self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
-        elif len(self.data_vault.get_labels()) < 7:
+        if self.step > 110:
             if true_type not in self.data_vault.get_labels():
                 self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
-        else:    
-            if self.step > 130:
+                self.data_vault.process_guess(fish_id, true_type)
+            else:
+                self.data_vault.process_guess(fish_id, true_type)
+        if self.step > 140 and len(self.data_vault.get_labels()) > 6:
+            if self.step % 10 == 0:
                 self.model_vault.retrain_models(self.data_vault)
+                
 
 
