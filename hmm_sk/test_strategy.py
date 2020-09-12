@@ -7,6 +7,8 @@ from utlis import (
     count_based_inicialization,
     forward_algorithm,
     log_PO_given_lambda,
+    pretty_print_matrix,
+    euclidean_distance
 )
 from sklearn.metrics import accuracy_score
 import time
@@ -84,7 +86,7 @@ class HMM:
 
 
 
-
+"""find optimal number of states"""
 # for nr_states in range(2, 16):
 #     accuracies = []
 #
@@ -114,6 +116,23 @@ class HMM:
 #         accuracies.append(accuracy_score(ground_truth, predictions))
 #     print(f"Average accuracy for {nr_states} states: {mean(accuracies)}")
 
+"""improve guessing strategy"""
+matrices = []
+for fish_type, sequence in zip(fish_types, sequences):
+    matrice = [[0 for _ in range(8)] for _ in range(8)]
+    for elem1, elem2 in zip(sequence[:110][:-1], sequence[:110][1:]):
+        matrice[elem1][elem2] += 1
+    print(f"fish_type:  {fish_type}")
+    pretty_print_matrix(matrice)
+    matrices.append(matrice)
+    print(f" euclidian  distance to 4: {euclidean_distance(matrices[0], matrices[-1])} \n")
+    if len(matrices) > 1:
+        print(f" euclidian  distance to 6: {euclidean_distance(matrices[1], matrices[-1])} \n")
+
+
+
+
+
 
 models = {f"{i}": {"model": None} for i in range(7)}
 ground_truth, predictions = [], []
@@ -129,12 +148,12 @@ for fish_type, sequence in zip(fish_types, sequences):
             if best_model  == None:
                 print("training first model")
                 model = HMM(2, 8)
-                model.train_model(sequence[:90], iterations=30)
+                model.train_model(sequence[:120], iterations=30)
                 best_model = model
             else:
                 model = HMM(2, 8)
                 model.set_matrices(best_model.A, best_model.B, best_model.pi)
-                model.train_model(sequence[:90], iterations=30)
+                model.train_model(sequence[:120], iterations=30)
 
                 if model.log > best_model.log:
                     print("new model is better")

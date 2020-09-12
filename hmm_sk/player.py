@@ -383,6 +383,12 @@ class DataVault:
     def __init__(self):
         self.observations = None
         self.fish_ids = None
+        self.fish_types = [i for i in range(7)]
+        self.labels = {}
+
+    def populate_fish_ids(self, nr_fish):
+        """Need to know the number of fish in the game"""
+        self.fish_ids = [i for i in range(nr_fish)]
 
     def store_new_observations(self, observations):
         if not self.observations:
@@ -400,23 +406,33 @@ class DataVault:
     def set_fish_ids(self, fish_ids):
         self.fish_ids = fish_ids
 
+    def get_labels(self):
+        return self.labels
+
     def pop_fish_id(self):
         return self.fish_ids.pop(0)
+
+    def process_guess(self, _, fish_id, true_type):
+        if true_type not in self.labels:
+            self.labels[true_type] = fish_id
+
 
 
 class ModelVault:
     def __init__(self, nr_of_models_to_train):
         self.models = {f"{i}": {"model": None} for i in range(7)}
         self.nr_of_models_to_train = nr_of_models_to_train
-        self.labels = None
         self.trained_models = []
+        self.model_split = [["0", "1", "2"], ["3", "4", "5", "6"]]
+        self.model_split_id = 0
 
     def train_init_models(self, data_vault, fish_type, fish_id):
-
-        # for fish_type, model in self.models.items():
         if not self.models[str(fish_type)]["model"]:
             self.train_and_store_model(fish_type, data_vault.get_fish_observations(fish_id))
-    
+            self.trained_models.append(fish_type)
+
+    def number_of_trained_models(self):
+        return len(self.trained_models)
 
     def train_and_store_model(self, fish_type, sequence):
         best_model = None
@@ -434,57 +450,28 @@ class ModelVault:
                     best_model = model
         self.models[str(fish_type)]["model"] = best_model
 
-    def set_labels(self, labels):
-        self.labels = labels
-
-
     def predict(self, fish_id,  data_vault):
         sequence = data_vault.get_fish_observations(fish_id)
         probs = [
             model["model"].run_inference(sequence)
-            if model['model'] else -math.inf
+            if model['model'] else 0
             for fish_type, model in self.models.items() 
         ]
         prediction = probs.index(max(probs))
 
         return prediction
 
-
-class GuessingMachine:
-    def __init__(self):
-        self.fish_types = [i for i in range(7)]
-        self.fish_ids = None
-        self.labels = {i: None for i in range(7)}
-        self.correct_fish = 0
-        self.latest_fish_type = 0
-
-
-    def populate_fish_ids(self, nr_fish):
-        """Need to know the number of fish in the game"""
-        self.fish_ids = [i for i in range(nr_fish)]
-
-    def what_to_guess(self):
-        fish_type = random.choice(self.fish_types)
-        # fish_type = random.randint(0,6)
-        fish_id = random.choice(self.fish_ids)
-        return fish_id, fish_type
-
-    def process_guess(self, _, fish_id, true_type):
-        if true_type in self.fish_types:
-            self.latest_fish_type  = true_type
-            self.fish_types.remove(true_type)
-            # self.fish_ids.remove(fish_id)
-            self.labels[true_type] = fish_id
-            self.correct_fish += 1
-
-    def get_labels(self):
-        return self.labels
-
-    def get_correct_fish(self):
-        return self.correct_fish
-
-    def get_fish_ids(self):
-        return self.fish_ids
+    def retrain_models(self, data_vault):
+        if self.model_split_id == 0:
+            for model_id in self.model_split[self.model_split_id]:
+                fish_id = data_vault.get_labels()[model_id]
+                self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
+            self.model_split_id = 1
+        if self.model_split_id == 1:
+            for model_id in self.model_split[self.model_split_id]:
+                fish_id = data_vault.get_labels()[model_id]
+                self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
+            self.model_split_id = 0
 
 
 class HMM:
@@ -501,7 +488,6 @@ class HMM:
         TODO: Make more advanced later on
         """
         if self.nr_states == 4 and init_method == "halves":
-            # print("using halves init")
             self.A = [
                 [0.25, 0.25, 0, 25, 0.05, 0.05, 0.05, 0.05, 0.05],
                 [0.05, 0.05, 0.25, 0.25, 0, 25, 0.05, 0.05, 0.05],
@@ -511,7 +497,6 @@ class HMM:
             self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
             self.pi = uniform_random_inicialization(1, self.nr_states)
         if self.nr_states == 4 and init_method == "compass":
-            # print("using compass init")
             self.A = [
                 [0.25, 0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.25],
                 [0.05, 0.25, 0.25, 0.25, 0.05, 0.05, 0.05, 0.05],
@@ -538,14 +523,14 @@ class HMM:
     def run_inference(self, O):
         """Check if oberservation sequence is likely to be produced by the model
         TODO:  Change  to  forward_algorithm"""
-        # return foward_algorithm_prob(
-        #     self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 30
-        # )
-
-        _, scaling_vector = forward_algorithm(
-            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+        return foward_algorithm_prob(
+            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 50
         )
-        return log_PO_given_lambda(scaling_vector)
+
+        # _, scaling_vector = forward_algorithm(
+        #     self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+        # )
+        # return log_PO_given_lambda(scaling_vector)
 
     def set_matrices(self, A, B, pi):
         self.A = A
@@ -563,10 +548,10 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         self.models = {f"{i}": {"model": None} for i in range(7)}
         self.models_to_train = 20
         self.start_guessing_step = 90
-        self.guess_machine = GuessingMachine()
         self.model_vault = ModelVault(self.models_to_train)
         self.data_vault = DataVault()
         self.labels = None
+        self.step = None
 
     def guess(self, step, observations):
         """
@@ -577,15 +562,18 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param observations: a list of N_FISH observations, encoded as integers
         :return: None or a tuple (fish_id, fish_type)
         """
-
+        self.step = step
+        # print(step)
         self.data_vault.store_new_observations(observations)
         if step == 1:
-            self.guess_machine.populate_fish_ids(len(observations))
-            self.data_vault.set_fish_ids(self.guess_machine.fish_ids)
-        if step == 105:
+            self.data_vault.populate_fish_ids(len(observations))
+        if step == 110:
             fish_id = self.data_vault.pop_fish_id()
-            return fish_id, random.randint(0,6)
-        if step > 105:
+            return fish_id, random.randint(0, 6)
+        if step > 110:
+            # if step in (105, 110, 115, 120):
+            #     # print(self.guess_machine.get_labels())
+            #     self.model_vault.retrain_models(self.data_vault)
             fish_id = self.data_vault.pop_fish_id()
             pred = self.model_vault.predict(fish_id,  self.data_vault)
             return fish_id, pred
@@ -600,7 +588,10 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param true_type: the correct type of the fish
         :return:
         """
-        
-        self.guess_machine.process_guess(correct, fish_id, true_type)
-        if not correct and self.guess_machine.get_correct_fish() < 7:
+        if self.step == 1:
             self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
+        else:
+            if true_type not in self.data_vault.get_labels():
+                self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
+
+
