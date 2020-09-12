@@ -442,7 +442,8 @@ class ModelVault:
         sequence = data_vault.get_fish_observations(fish_id)
         probs = [
             model["model"].run_inference(sequence)
-            for fish_type, model in self.models.items() if model['model']
+            if model['model'] else 0
+            for fish_type, model in self.models.items() 
         ]
         prediction = probs.index(max(probs))
 
@@ -581,14 +582,12 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         if step == 1:
             self.guess_machine.populate_fish_ids(len(observations))
             self.data_vault.set_fish_ids(self.guess_machine.fish_ids)
-        if step == 90:
+        if step == 105:
             fish_id = self.data_vault.pop_fish_id()
             return fish_id, random.randint(0,6)
-        if step > 90:
+        if step > 105:
             fish_id = self.data_vault.pop_fish_id()
             pred = self.model_vault.predict(fish_id,  self.data_vault)
-            print("--------")
-            print(f'Predicted fish id: {fish_id}, tpye: {pred}')
             return fish_id, pred
 
     def reveal(self, correct, fish_id, true_type):
@@ -603,8 +602,5 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         """
         
         self.guess_machine.process_guess(correct, fish_id, true_type)
-        print(f'CORRECT fish id: {fish_id}, tpye: {true_type}')
-        print(fish_id, true_type)
         if not correct and self.guess_machine.get_correct_fish() < 7:
-            print("Train new model")
             self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
