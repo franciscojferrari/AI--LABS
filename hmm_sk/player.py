@@ -389,7 +389,6 @@ class DataVault:
             self.observations = [[observation] for observation in observations]
 
         else:
-
             self.observations = [
                 observation + [new_observation]
                 for observation, new_observation in zip(self.observations, observations)
@@ -412,15 +411,12 @@ class ModelVault:
         self.labels = None
         self.trained_models = []
 
-    def train_init_models(self, data_vault):
-        count = 0
-        for fish_type, model in self.models.items():
-            if count > 0:
-                break
-            if not model["model"]:
-                self.train_and_store_model(fish_type, data_vault.get_fish_observations(self.labels[int(fish_type)]))
-                count += 1
+    def train_init_models(self, data_vault, fish_type, fish_id):
 
+        # for fish_type, model in self.models.items():
+        if not self.models[str(fish_type)]["model"]:
+            self.train_and_store_model(fish_type, data_vault.get_fish_observations(fish_id))
+    
 
     def train_and_store_model(self, fish_type, sequence):
         best_model = None
@@ -446,7 +442,7 @@ class ModelVault:
         sequence = data_vault.get_fish_observations(fish_id)
         probs = [
             model["model"].run_inference(sequence)
-            for fish_type, model in self.models.items()
+            for fish_type, model in self.models.items() if model['model']
         ]
         prediction = probs.index(max(probs))
 
@@ -459,6 +455,7 @@ class GuessingMachine:
         self.fish_ids = None
         self.labels = {i: None for i in range(7)}
         self.correct_fish = 0
+        self.latest_fish_type = 0
 
 
     def populate_fish_ids(self, nr_fish):
@@ -466,15 +463,16 @@ class GuessingMachine:
         self.fish_ids = [i for i in range(nr_fish)]
 
     def what_to_guess(self):
-        # fish_type = random.choice(self.fish_types)
-        fish_type = random.randint(0,6)
+        fish_type = random.choice(self.fish_types)
+        # fish_type = random.randint(0,6)
         fish_id = random.choice(self.fish_ids)
         return fish_id, fish_type
 
     def process_guess(self, _, fish_id, true_type):
         if true_type in self.fish_types:
+            self.latest_fish_type  = true_type
             self.fish_types.remove(true_type)
-            self.fish_ids.remove(fish_id)
+            # self.fish_ids.remove(fish_id)
             self.labels[true_type] = fish_id
             self.correct_fish += 1
 
@@ -485,7 +483,7 @@ class GuessingMachine:
         return self.correct_fish
 
     def get_fish_ids(self):
-        return
+        return self.fish_ids
 
 
 class HMM:
@@ -582,26 +580,16 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         self.data_vault.store_new_observations(observations)
         if step == 1:
             self.guess_machine.populate_fish_ids(len(observations))
-            fish_id, fish_type = self.guess_machine.what_to_guess()
-            return fish_id, fish_type
-        elif 1 < step < 40:
-            if self.guess_machine.get_correct_fish() < 7:
-                fish_id, fish_type = self.guess_machine.what_to_guess()
-                return fish_id, fish_type
-            else:
-                if not self.labels:
-                    self.labels = self.guess_machine.get_labels()
-                    self.model_vault.set_labels(self.labels)
-                    self.data_vault.set_fish_ids(self.guess_machine.fish_ids)
-
-        elif STEPS < step < STEPS+8:
-            self.model_vault.train_init_models(self.data_vault)
-        elif step >= STEPS+8:
+            self.data_vault.set_fish_ids(self.guess_machine.fish_ids)
+        if step == 90:
+            fish_id = self.data_vault.pop_fish_id()
+            return fish_id, random.randint(0,6)
+        if step > 90:
             fish_id = self.data_vault.pop_fish_id()
             pred = self.model_vault.predict(fish_id,  self.data_vault)
-
+            print("--------")
+            print(f'Predicted fish id: {fish_id}, tpye: {pred}')
             return fish_id, pred
-
 
     def reveal(self, correct, fish_id, true_type):
         """
@@ -613,4 +601,10 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param true_type: the correct type of the fish
         :return:
         """
+        
         self.guess_machine.process_guess(correct, fish_id, true_type)
+        print(f'CORRECT fish id: {fish_id}, tpye: {true_type}')
+        print(fish_id, true_type)
+        if not correct and self.guess_machine.get_correct_fish() < 7:
+            print("Train new model")
+            self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
