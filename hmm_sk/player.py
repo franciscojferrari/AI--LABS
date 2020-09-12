@@ -376,7 +376,7 @@ def euclidean_distance(mat_a, mat_b):
 
 NR_STATES = 2
 INIT_STRATEGY = "default"
-TRAIN_ITERATIONS = 50
+TRAIN_ITERATIONS = 30
 
 
 class DataVault:
@@ -442,7 +442,7 @@ class ModelVault:
         sequence = data_vault.get_fish_observations(fish_id)
         probs = [
             model["model"].run_inference(sequence)
-            if model['model'] else 0
+            if model['model'] else -math.inf
             for fish_type, model in self.models.items() 
         ]
         prediction = probs.index(max(probs))
@@ -538,14 +538,14 @@ class HMM:
     def run_inference(self, O):
         """Check if oberservation sequence is likely to be produced by the model
         TODO:  Change  to  forward_algorithm"""
-        return foward_algorithm_prob(
-            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 30
-        )
-
-        # _, scaling_vector = forward_algorithm(
-        #     self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+        # return foward_algorithm_prob(
+        #     self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 30
         # )
-        # return log_PO_given_lambda(scaling_vector)
+
+        _, scaling_vector = forward_algorithm(
+            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+        )
+        return log_PO_given_lambda(scaling_vector)
 
     def set_matrices(self, A, B, pi):
         self.A = A
