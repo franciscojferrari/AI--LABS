@@ -19,7 +19,6 @@ LOGGER = logging.getLogger(__name__)
 NR_STATES = 2
 TRAIN_ITERATIONS = 30
 
-
 class PlayerControllerHMM(PlayerControllerHMMAbstract):
     def init_parameters(self):
         """
