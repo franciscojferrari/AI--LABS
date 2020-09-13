@@ -359,7 +359,7 @@ def euclidean_distance(mat_a, mat_b):
 
 NR_STATES = 2
 INIT_STRATEGY = "default"
-TRAIN_ITERATIONS = 35
+TRAIN_ITERATIONS = 30
 RETRAINING = False
 
 
@@ -414,6 +414,8 @@ def count_states(sequence):
     count_vec = [0 for _ in range(8)]
     for elem in sequence:
         count_vec[elem] += 1
+    tot = sum(count_vec)
+    count_vec = [i/tot for i in count_vec]
     return [count_vec]
 
 
@@ -569,10 +571,10 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         self.data_vault.store_new_observations(observations)
         if step == 1:
             self.data_vault.populate_fish_ids(len(observations))
-        if step == 108:
+        if step == 109:
             fish_id = self.data_vault.pop_fish_id()
             return fish_id, random.randint(0, 6)
-        if step > 108:
+        if step > 109:
             fish_id = self.data_vault.pop_fish_id()
             idx = self.model_vault.predict(fish_id, self.data_vault)
             pred = self.data_vault.get_all_fish_types()[idx]
@@ -589,7 +591,7 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :return:
         """
         self.data_vault.process_guess(fish_id, true_type)
-        if self.step >= 108:
+        if self.step >= 109:
             self.model_vault.train_and_store_model(
                 true_type,
                 self.data_vault,
