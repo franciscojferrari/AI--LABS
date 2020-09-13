@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hmm_sk/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/player.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="452" column="42" lean-forward="true" selection-start-line="452" selection-start-column="42" selection-end-line="452" selection-end-column="42" />
+            <state relative-caret-position="225">
+              <caret line="290" column="25" selection-start-line="290" selection-start-column="4" selection-end-line="290" selection-end-column="25" />
               <folding>
                 <element signature="e#24#85#0" expanded="true" />
               </folding>
@@ -108,8 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get_correct_fish</find>
-      <find>trained_models</find>
       <find>guess_machine</find>
       <find>self.labels</find>
       <find>.get_labels</find>
@@ -138,6 +135,8 @@
       <find>max(</find>
       <find>mean(</find>
       <find>train_and</find>
+      <find>30</find>
+      <find>run_inference</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -333,12 +332,12 @@
       <workItem from="1599056197583" duration="4245000" />
       <workItem from="1599118457553" duration="33763000" />
       <workItem from="1599549925059" duration="56800000" />
-      <workItem from="1599916302540" duration="13948000" />
+      <workItem from="1599916302540" duration="14899000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116427000" />
+    <option name="totallyTimeSpent" value="117378000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -611,8 +610,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="452" column="42" lean-forward="true" selection-start-line="452" selection-start-column="42" selection-end-line="452" selection-end-column="42" />
+        <state relative-caret-position="225">
+          <caret line="290" column="25" selection-start-line="290" selection-start-column="4" selection-end-line="290" selection-end-column="25" />
           <folding>
             <element signature="e#24#85#0" expanded="true" />
           </folding>

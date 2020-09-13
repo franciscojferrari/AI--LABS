@@ -2,15 +2,6 @@
 
 from player_controller_hmm import PlayerControllerHMMAbstract
 from constants import *
-import random as random
-# from utlis import (
-#     baum_welch,
-#     uniform_random_inicialization,
-#     foward_algorithm_prob,
-#     forward_algorithm,
-#     log_PO_given_lambda,
-#     count_based_inicialization,
-# )
 
 import math
 import logging
@@ -120,11 +111,7 @@ def forward_algorithm(
     """
 
     alpha = list(map(lambda x, y: x * y, pi[0], T(B)[O[0]]))
-    try:
-        c0 = 1 / sum(alpha)
-    except:
-        print(pi[0], T(B)[O[0]])
-        print(alpha)
+    c0 = 1 / sum(alpha)
 
     alpha = list(map(lambda x: x * c0, alpha))
 
@@ -301,20 +288,7 @@ def baum_welch_exp(
     return A, B, logprobs[1:], iters, pi
 
 
-def print_list(input_list: List) -> str:
-    return_list = [str(i) for i in input_list[::-1]]
-    print(" ".join(return_list))
-
-
-def parse_matrix(matrix: List) -> str:
-    rows = len(matrix)
-    columns = len(matrix[0])
-    list = [rows, columns] + [item for row in matrix for item in row]
-
-    print(" ".join(map(str, list)))
-
-
-def random_inicialization(n: int, m: int):
+def random_initialization(n: int, m: int):
     matrix = []
     for i in range(n):
         row_temp = [random.random() for _ in range(m)]
@@ -332,7 +306,7 @@ def diagonal_matrix(n: int):
     return matrix
 
 
-def uniform_random_inicialization(n: int, m: int):
+def uniform_random_initialization(n: int, m: int):
     matrix = []
     for i in range(n):
         row_temp = [random.uniform(9, 10) for _ in range(m)]
@@ -340,11 +314,11 @@ def uniform_random_inicialization(n: int, m: int):
     return matrix
 
 
-def uniform_inicialization(n: int, m: int):
+def uniform_initialization(n: int, m: int):
     return [[1 / m for _ in range(m)] for _ in range(n)]
 
 
-def count_based_inicialization(n: int, m: int, same_state_probability: float = 0.7):
+def count_based_initialization(n: int, m: int, same_state_probability: float = 0.7):
     matrix = []
     for i in range(n):
         matrix.append([])
@@ -373,7 +347,7 @@ def euclidean_distance(mat_a, mat_b):
 
 NR_STATES = 2
 INIT_STRATEGY = "default"
-TRAIN_ITERATIONS = 30
+TRAIN_ITERATIONS = 35
 RETRAINING = False
 
 
@@ -472,13 +446,19 @@ class ModelVault:
 
     def predict(self, fish_id,  data_vault):
         sequence = data_vault.get_fish_observations(fish_id)
-        probs = [
-            model.run_inference(sequence)
-            for model in self.trained_models
+        try:
+            probs = [
+                model.run_inference(sequence)
+                for model in self.trained_models
+            ]
+            return probs.index(max(probs))
+        except:
+            probs = [
+                model.run_inference(sequence, prob=True)
+                for model in self.trained_models
         ]
-        idx = probs.index(max(probs))
 
-        return idx
+            return probs.index(max(probs))
 
 
 class HMM:
@@ -499,8 +479,8 @@ class HMM:
                 [0.05, 0.05, 0.05, 0.05, 0.25, 0.25, 0, 25, 0.05],
                 [0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.25, 0, 25],
             ]
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         if self.nr_states == 4 and init_method == "compass":
             self.A = [
                 [0.25, 0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.25],
@@ -508,16 +488,16 @@ class HMM:
                 [0.05, 0.05, 0.05, 0.25, 0.25, 0.25, 0.05, 0.05],
                 [0.05, 0.05, 0.05, 0.05, 0.05, 0.25, 0.25, 0, 25],
             ]
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         elif self.nr_states == 8 and not init_method:
-            self.A = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.B = count_based_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.A = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.B = count_based_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         elif init_method == "default":
-            self.A = uniform_random_inicialization(self.nr_states, self.nr_states)
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.A = uniform_random_initialization(self.nr_states, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
 
     def train_model(self, O: List, iterations: int=500) -> None:
         self.initialize_model(INIT_STRATEGY)
@@ -525,17 +505,18 @@ class HMM:
             self.A, self.B, self.pi, O, iterations
         )
 
-    def run_inference(self, O: List) -> float:
-        """Check if oberservation sequence is likely to be produced by the model
-        TODO:  Change  to  forward_algorithm"""
-        return foward_algorithm_prob(
-            self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 50
-        )
+    def run_inference(self, O: List, prob: bool = False) -> float:
+        """Check if oberservation sequence is likely to be produced by the model"""
+        if not prob:
+            _, scaling_vector = forward_algorithm(
+                self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+            )
+            return log_PO_given_lambda(scaling_vector)
+        else:
 
-        # _, scaling_vector = forward_algorithm(
-        #     self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
-        # )
-        # return log_PO_given_lambda(scaling_vector)
+            return foward_algorithm_prob(
+                self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 55
+            )
 
     def set_matrices(self, A: List[List], B: List[List], pi: List[List]) -> None:
         self.A = A
