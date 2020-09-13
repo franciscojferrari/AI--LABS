@@ -2,7 +2,6 @@ import math
 from typing import List, Tuple
 import random as random
 from random import randrange
-from statistics import mean
 
 
 def T(matrix: List[List]) -> List[List]:
