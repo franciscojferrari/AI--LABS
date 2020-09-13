@@ -3,12 +3,12 @@ import sys
 from utlis import (
     baum_welch_exp,
     parse_input,
-    count_based_inicialization,
-    random_inicialization,
+    count_based_initialization,
+    random_initialization,
     baum_welch,
-    uniform_inicialization,
+    uniform_initialization,
     euclidean_distance,
-    uniform_random_inicialization,
+    uniform_random_initialization,
     foward_algorithm_prob,
     forward_algorithm
 )
@@ -75,11 +75,11 @@ def main():
 def q8():
     _A, _B, _pi, O = parse_input(file_content)
 
-    A = count_based_inicialization(3, 3, 0.7)
+    A = count_based_initialization(3, 3, 0.7)
     print(f"A: {A}")
-    B = count_based_inicialization(3, 4, 0.7)
+    B = count_based_initialization(3, 4, 0.7)
     print(f"b: {B}")
-    pi = uniform_random_inicialization(1, 3)
+    pi = uniform_random_initialization(1, 3)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -98,9 +98,9 @@ def q9():
 
     #  experiment with 7 states
     print("\nExperiment  with 7 states:")
-    A = uniform_random_inicialization(7, 7)
-    B = uniform_random_inicialization(7, 4)
-    pi = uniform_random_inicialization(1, 7)
+    A = uniform_random_initialization(7, 7)
+    B = uniform_random_initialization(7, 4)
+    pi = uniform_random_initialization(1, 7)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -113,9 +113,9 @@ def q9():
 
     #  experiment with  6 states
     print("\nExperiment  with 6 states:")
-    A = uniform_random_inicialization(6, 6)
-    B = uniform_random_inicialization(6, 4)
-    pi = uniform_random_inicialization(1, 6)
+    A = uniform_random_initialization(6, 6)
+    B = uniform_random_initialization(6, 4)
+    pi = uniform_random_initialization(1, 6)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -128,9 +128,9 @@ def q9():
 
     #  experiment with  5 states
     print("\nExperiment  with 5 states:")
-    A = uniform_random_inicialization(5, 5)
-    B = uniform_random_inicialization(5, 4)
-    pi = uniform_random_inicialization(1, 5)
+    A = uniform_random_initialization(5, 5)
+    B = uniform_random_initialization(5, 4)
+    pi = uniform_random_initialization(1, 5)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -143,9 +143,9 @@ def q9():
 
     #  experiment with 4 states
     print("\nExperiment  with 4 states:")
-    A = uniform_random_inicialization(4, 4)
-    B = uniform_random_inicialization(4, 4)
-    pi = uniform_random_inicialization(1, 4)
+    A = uniform_random_initialization(4, 4)
+    B = uniform_random_initialization(4, 4)
+    pi = uniform_random_initialization(1, 4)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -158,9 +158,9 @@ def q9():
 
     #  experiment with 3 states
     print("\nExperiment  with 3 states:")
-    A = uniform_random_inicialization(3, 3)
-    B = uniform_random_inicialization(3, 4)
-    pi = uniform_random_inicialization(1, 3)
+    A = uniform_random_initialization(3, 3)
+    B = uniform_random_initialization(3, 4)
+    pi = uniform_random_initialization(1, 3)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -173,9 +173,9 @@ def q9():
 
     #  experiment with 2 states
     print("\nExperiment  with 2 states:")
-    A = uniform_random_inicialization(2, 2)
-    B = uniform_random_inicialization(2, 4)
-    pi = uniform_random_inicialization(1, 2)
+    A = uniform_random_initialization(2, 2)
+    B = uniform_random_initialization(2, 4)
+    pi = uniform_random_initialization(1, 2)
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)
 
@@ -192,7 +192,7 @@ def q10():
     #  experiment with 3 states
     print("\nExperiment  with 3 states:")
     A = diagonal_matrix(3)
-    B = uniform_random_inicialization(3, 4)
+    B = uniform_random_initialization(3, 4)
     pi = [[0, 0, 1]]
 
     A_new, B_new, pi_new = baum_welch(A, B, pi, O, 1000)

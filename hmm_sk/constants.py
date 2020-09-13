@@ -7,7 +7,7 @@ N_FISH = 70
 N_SPECIES = 7
 
 # Total number of time steps per environment
-N_STEPS = 180
+N_STEPS = 300
 
 # Number of possible emissions, i.e. fish movements 
 # (all emissions are represented with integers from 0 to this constant (exclusive))

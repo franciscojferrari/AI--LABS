@@ -288,14 +288,14 @@ def parse_matrix(matrix: List) -> str:
 
     print(" ".join(map(str, list)))
 
-def random_inicialization(n:int, m:int):
+def random_initialization(n:int, m:int):
     matrix = []
     for i in range(n):
         row_temp = [random.random() for _ in range(m)]
         matrix.append([element/sum(row_temp) for element in row_temp])
     return matrix
 
-def uniform_random_inicialization(n:int, m:int):
+def uniform_random_initialization(n:int, m:int):
     matrix = []
     for i in range(n):
         row_temp = [random.uniform(9, 10) for _ in range(m)]
@@ -307,10 +307,10 @@ def diagonal_matrix(n:int):
     for i in range(n): 
         matrix.append([1 if j==i else 0 for j in range(n)])
 
-def uniform_inicialization(n:int, m:int):
+def uniform_initialization(n:int, m:int):
     return [[1/m for _ in range(m)] for _ in range(n)]
 
-def count_based_inicialization(n:int, m:int, same_state_probability:float = 0.8):
+def count_based_initialization(n:int, m:int, same_state_probability:float = 0.8):
     matrix = []
     for i in range(n):
         matrix.append([])

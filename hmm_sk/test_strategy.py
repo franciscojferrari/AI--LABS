@@ -1,10 +1,10 @@
 from utlis import (
     baum_welch,
-    uniform_random_inicialization,
+    uniform_random_initialization,
     foward_algorithm_prob,
     forward_algorithm,
     log_PO_given_lambda,
-    count_based_inicialization,
+    count_based_initialization,
     forward_algorithm,
     log_PO_given_lambda,
     pretty_print_matrix,
@@ -44,24 +44,24 @@ class HMM:
                       [0.05, 0.05, 0.25, 0.25, 0, 25, 0.05, 0.05, 0.05],
                       [0.05, 0.05,  0.05, 0.05, 0.25, 0.25, 0, 25, 0.05],
                       [0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.25, 0, 25]]
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         if self.nr_states == 4 and init_method == "compass":
             print("using compass init")
             self.A = [[0.25, 0.25, 0.05, 0.05, 0.05, 0.05, 0.05, 0.25],
                       [0.05, 0.25, 0.25, 0.25, 0.05, 0.05, 0.05, 0.05],
                       [0.05, 0.05,  0.05, 0.25, 0.25, 0.25, 0.05, 0.05],
                       [0.05, 0.05, 0.05, 0.05, 0.05, 0.25, 0.25, 0, 25]]
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         elif self.nr_states == 8 and not init_method:
-            self.A = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.B = count_based_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.A = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.B = count_based_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
         elif init_method == "default":
-            self.A = uniform_random_inicialization(self.nr_states, self.nr_states)
-            self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
-            self.pi = uniform_random_inicialization(1, self.nr_states)
+            self.A = uniform_random_initialization(self.nr_states, self.nr_states)
+            self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
+            self.pi = uniform_random_initialization(1, self.nr_states)
 
     def train_model(self, O, iterations=500):
         self.initialize_model("default", O)
