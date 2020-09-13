@@ -1,11 +1,9 @@
 import math
-import logging
 from typing import List, Tuple
 import random as random
 from random import randrange
 from statistics import mean
 
-LOGGER = logging.getLogger(__name__)
 
 def T(matrix: List[List]) -> List[List]:
     """Transpose of matrix
@@ -18,7 +16,6 @@ def T(matrix: List[List]) -> List[List]:
     """
     return list(map(list, zip(*matrix)))
 
-
 def elem_wise_product(vector_a:list, vector_b:list) -> list:
     """[summary]
 
@@ -30,7 +27,6 @@ def elem_wise_product(vector_a:list, vector_b:list) -> list:
         list: element wise product between vector a and b
     """
     return [(element_a * element_b) for element_a, element_b in zip(vector_a, vector_b)]
-
 
 def matrix_mulitplication(a: list, b: list) -> list:
     """Matrix multiplication.
@@ -46,7 +42,6 @@ def matrix_mulitplication(a: list, b: list) -> list:
         [sum(ii * jj for ii, jj in zip(i, j)) for j in list(map(list, zip(*b)))]
         for i in a
     ]
-
 
 def foward_algorithm_prob(
     A: List[List],
@@ -84,7 +79,6 @@ def foward_algorithm_prob(
         alpha_list.append(sum(alpha))
 
     return max(alpha_list)
-
 
 def forward_algorithm(
         A: List[List],
@@ -134,7 +128,6 @@ def forward_algorithm(
 
     return scaled_alpha_matrix, scaling_vector
 
-
 def backward_algorithm(
         A: List[List],
         B: List[List],
@@ -170,7 +163,6 @@ def backward_algorithm(
             beta.append(beta_temp)
         scaled_beta_matrix.insert(0, beta)
     return scaled_beta_matrix
-
 
 def di_gamma_algorithm(
         A: List[List],
@@ -213,7 +205,6 @@ def di_gamma_algorithm(
 
     return gamma_list, di_gamma_list
 
-
 def re_estimate_pi(gamma_list: List[List]) -> List[List]:
     """Re-Estimation of PI
 
@@ -224,7 +215,6 @@ def re_estimate_pi(gamma_list: List[List]) -> List[List]:
         List[List]: Re-estimated gamma list
     """
     return [gamma_list[0]]
-
 
 def re_estimate_A(
         A: List[List], gamma_list: List[List], di_gamma_list: List[List]
@@ -251,7 +241,6 @@ def re_estimate_A(
 
     return re_estimated_A
 
-
 def re_estimate_B(B: List[List], O: List, gamma_list: List[List]) -> List[List]:
     re_estimated_B = []
 
@@ -266,14 +255,25 @@ def re_estimate_B(B: List[List], O: List, gamma_list: List[List]) -> List[List]:
 
     return re_estimated_B
 
-
 def log_PO_given_lambda(scaling_vector: List) -> float:
     return -sum([math.log(ci) for ci in scaling_vector])
-
 
 def baum_welch(
         A: List[List], B: List[List], pi: List, O: List, maxIters: int
 ) -> Tuple[List[List], List[List]]:
+    """ Used to find the unknown parameters of a hidden Markov model (HMM). 
+    It makes use of the forward-backward algorithm to compute the statistics for the expectation step
+
+    Args:
+        A (List[List]): Transition Matrix
+        B (List[List]): Emission / Output probability matrix
+        pi (List): Initial state vector
+        O (List): vector of emissions sequences itself
+        maxIters (int): Numer of maximun interations to run the algorithm
+
+    Returns:
+        Tuple[List[List], List[List]]: Returns New A matrix, New B matrixB, New pi matrix, and the log probability of the output sequence given the model
+    """
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
@@ -297,14 +297,12 @@ def baum_welch(
 
     return A, B, pi, oldLogProb
 
-
 def random_initialization(n: int, m: int):
     matrix = []
     for _ in range(n):
         row_temp = [random.random() for _ in range(m)]
         matrix.append([element / sum(row_temp) for element in row_temp])
     return matrix
-
 
 def diagonal_matrix(n: int):
     matrix = []
@@ -314,7 +312,6 @@ def diagonal_matrix(n: int):
 
     return matrix
 
-
 def uniform_random_initialization(n: int, m: int):
     matrix = []
     for _ in range(n):
@@ -322,10 +319,8 @@ def uniform_random_initialization(n: int, m: int):
         matrix.append([element / sum(row_temp) for element in row_temp])
     return matrix
 
-
 def uniform_initialization(n: int, m: int):
     return [[1 / m for _ in range(m)] for _ in range(n)]
-
 
 def count_based_initialization(n: int, m: int, same_state_probability: float = 0.7):
     matrix = []
