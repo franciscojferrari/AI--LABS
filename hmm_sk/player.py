@@ -42,7 +42,7 @@ class DataVault:
 
     def get_fish_observations(self, fish_id):
         return self.observations[int(fish_id)]
-
+        
     def set_fish_ids(self, fish_ids):
         self.fish_ids = fish_ids
 
@@ -116,11 +116,6 @@ class HMM:
         self.pi = pi
         self.log = None
         self.initialize_model()
-        
-    def set_matrices(self, A, B, pi):
-        self.A = A
-        self.B = B
-        self.pi = pi
 
     def initialize_model(self):
         if not self.A:

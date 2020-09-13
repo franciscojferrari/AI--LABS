@@ -19,7 +19,16 @@ def T(matrix: List[List]) -> List[List]:
     return list(map(list, zip(*matrix)))
 
 
-def elem_wise_product(vector_a, vector_b):
+def elem_wise_product(vector_a:list, vector_b:list) -> list:
+    """[summary]
+
+    Args:
+        vector_a (list): vector a
+        vector_b (list): vector b
+
+    Returns:
+        list: element wise product between vector a and b
+    """
     return [(element_a * element_b) for element_a, element_b in zip(vector_a, vector_b)]
 
 
@@ -39,11 +48,34 @@ def matrix_mulitplication(a: list, b: list) -> list:
     ]
 
 
-def foward_algorithm_prob(A: list, B: list, pi: list, O: list, stop_step: int = -1) -> float:
+def foward_algorithm_prob(
+    A: List[List],
+    B: List[List],
+    pi: List,
+    O: List[List],
+    stop_step: int = 0
+) -> float:
+
+    """Foward algorithm without scaling
+    We iterate 10 times over different values of alpha calculated over a random set of observations of length stop_step,
+     and we return the max of these set of alpha
+
+    Args:
+        A (List[List]): Transition Matrix
+        B (List[List]): Emission / Output probability matrix
+        pi (list): Initial state vector
+        O (list): vector of emissions sequences itself
+        stop_step (int, optional): number of observations to calculate the state probabily given the output overservations. Defaults to 0
+
+    Returns:
+        float: 'belief state': the probability of a state at a certain time, given the history of evidence
+    """
     alpha_list = []
     for _ in range(10):
         num = randrange(len(O) - stop_step)
-        new_O = O[num:num + stop_step]
+        new_O = O
+        if stop_step > 0:
+            new_O = O[num:num + stop_step]
         for index, emission in enumerate(new_O):
             if index == 0:
                 alpha = elem_wise_product(pi[0], T(B)[emission])
@@ -58,23 +90,22 @@ def forward_algorithm(
         A: List[List],
         B: List[List],
         pi: List,
-        O: List[List],
-        scaled_alpha_matrix: List = [],
-        scaling_vector: List = [],
+        O: List[List]
 ) -> Tuple[List[List], List]:
-    """Foward Algo
+    """Foward algorithm with scaler.
 
     Args:
         A (List[List]): Transition Matrix
         B (List[List]): Emission / Output probability matrix
         pi (list): Initial state vector
-        alpha (list): vector that represents the probability of being in state j after seeing the first t observations,
         O (list): vector of emissions sequences itself
-        first_iteration (bool, optional): states if the function is the first time is running. Defaults to True.
-
+        
     Returns:
-        float: Sum of Alpha
+        Tuple[List[List], List]: scaled_alpha_matrix (The Matrix with all the alpha matrixes over the different t),
+         scaling_vector (The scaling vector for the different alpha matrixes for each time t)
     """
+    scaled_alpha_matrix = []
+    scaling_vector = []
 
     alpha = list(map(lambda x, y: x * y, pi[0], T(B)[O[0]]))
     c0 = 1 / sum(alpha)
@@ -108,13 +139,26 @@ def backward_algorithm(
         A: List[List],
         B: List[List],
         O: List,
-        scaling_vector: List,
-        scaled_beta_matrix: List[List] = [],
+        scaling_vector: List
 ) -> List[List]:
+    """Backwards algorithm with scaler
+
+    Args:
+         A (List[List]): Transition Matrix
+        B (List[List]): Emission / Output probability matrix
+        O (list): vector of emissions sequences itself
+        scaling_vector (List): The scaling vector for the different alpha matrixes for each time t.
+        scaled_beta_matrix (List[List], optional): The Matrix with all the beta matrixes over the different t.. Defaults to [].
+
+    Returns:
+        List[List]: scaled_beta_matrix
+    """
+    scaled_beta_matrix = []
+
     bt_minus_1 = [scaling_vector[-1] for _ in A]
     scaled_beta_matrix.append(bt_minus_1)
 
-    for t, emission in reversed(list(enumerate(O[:-1]))):
+    for t, _ in reversed(list(enumerate(O[:-1]))):
         beta = []
 
         for i in range(len(A)):
@@ -133,11 +177,22 @@ def di_gamma_algorithm(
         B: List[List],
         O: List,
         scaled_alpha_matrix: List[List],
-        scaled_beta_matrix: List[List],
-        gamma_list: List = [],
-        di_gamma_list: List = [],
+        scaled_beta_matrix: List[List]
 ) -> Tuple[List[List], List[List]]:
+    """Di-Gamma Algortithm
 
+    Args:
+        A (List[List]): Transition Matrix
+        B (List[List]): Emission / Output probability matrix
+        O (list): vector of emissions sequences itself
+        scaled_alpha_matrix (List[List]): The Matrix with all the alpha matrixes over the different t
+        scaled_beta_matrix (List[List]): The Matrix with all the beta matrixes over the different t
+
+    Returns:
+        Tuple[List[List], List[List]]: gamma_list, di_gamma_list
+    """
+    gamma_list = []
+    di_gamma_list = []
     for t in range(len(O[:-1])):
         di_gamma = [[] for _ in A]
 
@@ -160,12 +215,30 @@ def di_gamma_algorithm(
 
 
 def re_estimate_pi(gamma_list: List[List]) -> List[List]:
+    """Re-Estimation of PI
+
+    Args:
+        gamma_list (List[List]): The list of gamma values
+
+    Returns:
+        List[List]: Re-estimated gamma list
+    """
     return [gamma_list[0]]
 
 
 def re_estimate_A(
         A: List[List], gamma_list: List[List], di_gamma_list: List[List]
 ) -> List[List]:
+    """Re-Estimation of A matrix
+
+    Args:
+        A (List[List]): A Matrix to be re-estimated
+        gamma_list (List[List]): [description]
+        di_gamma_list (List[List]): [description]
+
+    Returns:
+        List[List]: The new A matrix
+    """
     re_estimated_A = []
 
     for i in range(len(A)):
@@ -208,11 +281,11 @@ def baum_welch(
     while iters < maxIters and logProb > oldLogProb and abs(oldLogProb - logProb) > 0.000000005:
         oldLogProb = logProb
 
-        scaled_alpha_matrix, scaling_vector = forward_algorithm(A, B, pi, O, [], [])
-        scaled_beta_matrix = backward_algorithm(A, B, O, scaling_vector, [])
+        scaled_alpha_matrix, scaling_vector = forward_algorithm(A, B, pi, O)
+        scaled_beta_matrix = backward_algorithm(A, B, O, scaling_vector)
 
         gamma_list, di_gamma_list = di_gamma_algorithm(
-            A, B, O, scaled_alpha_matrix, scaled_beta_matrix, [], []
+            A, B, O, scaled_alpha_matrix, scaled_beta_matrix
         )
 
         pi = re_estimate_pi(gamma_list)
@@ -227,7 +300,7 @@ def baum_welch(
 
 def random_initialization(n: int, m: int):
     matrix = []
-    for i in range(n):
+    for _ in range(n):
         row_temp = [random.random() for _ in range(m)]
         matrix.append([element / sum(row_temp) for element in row_temp])
     return matrix
