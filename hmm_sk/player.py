@@ -20,7 +20,6 @@ from random import randrange
 from statistics import mean
 
 LOGGER = logging.getLogger(__name__)
-STEPS = 102
 
 
 def T(matrix: List[List]) -> List[List]:
@@ -95,7 +94,7 @@ def foward_algorithm_prob(A: list, B: list, pi: list, O: list, stop_step: int = 
                 alpha = elem_wise_product(matrix_mulitplication([alpha], A)[0], T(B)[emission])
         alpha_list.append(sum(alpha))
 
-    return max(alpha_list)
+    return mean(alpha_list)
 
 
 def forward_algorithm(
@@ -366,8 +365,6 @@ def pretty_print_matrix(mat: List[List]):
 
 
 def euclidean_distance(mat_a, mat_b):
-    col = len(mat_a[0])
-
     values = [math.pow((a - b), 2) for row_a, row_b in zip(mat_a, mat_b) for a, b in
               zip(row_a, row_b)]
     result = math.sqrt(sum(values) / len(mat_a))
@@ -377,6 +374,7 @@ def euclidean_distance(mat_a, mat_b):
 NR_STATES = 2
 INIT_STRATEGY = "default"
 TRAIN_ITERATIONS = 30
+RETRAINING = False
 
 
 class DataVault:
@@ -385,6 +383,7 @@ class DataVault:
         self.fish_ids = None
         self.fish_types = [i for i in range(7)]
         self.labels = {}
+        self.all_fish_types = []
 
     def populate_fish_ids(self, nr_fish):
         """Need to know the number of fish in the game"""
@@ -412,7 +411,13 @@ class DataVault:
     def pop_fish_id(self):
         return self.fish_ids.pop(0)
 
-    def process_guess(self, _, fish_id, true_type):
+    def append_fish_type(self, fish_type):
+        self.all_fish_types.append(fish_type)
+
+    def get_all_fish_types(self):
+        return self.all_fish_types
+
+    def process_guess(self, fish_id, true_type):
         if true_type not in self.labels:
             self.labels[true_type] = fish_id
 
@@ -420,62 +425,64 @@ class DataVault:
 
 class ModelVault:
     def __init__(self, nr_of_models_to_train):
-        self.models = {f"{i}": {"model": None} for i in range(7)}
         self.nr_of_models_to_train = nr_of_models_to_train
         self.trained_models = []
-        self.model_split = [["0", "1", "2"], ["3", "4", "5", "6"]]
-        self.model_split_id = 0
 
-    def train_init_models(self, data_vault, fish_type, fish_id):
-        if not self.models[str(fish_type)]["model"]:
-            self.train_and_store_model(fish_type, data_vault.get_fish_observations(fish_id))
-            self.trained_models.append(fish_type)
+    def train_and_store_model(self, true_type, data_vault, sequence):
 
-    def number_of_trained_models(self):
-        return len(self.trained_models)
+        # find an existing model that can be used for retraining
+        if true_type in data_vault.get_all_fish_types() and RETRAINING:
+            # print("Training a new model with init from other model")
+            idx = data_vault.get_all_fish_types().index(true_type)
+            model_for_init = self.trained_models[idx]
+            A, B, pi = model_for_init.get_matrices()
 
-    def train_and_store_model(self, fish_type, sequence):
-        best_model = None
-        for _ in range(self.nr_of_models_to_train):
-            if best_model == None:
-                model = HMM(NR_STATES, 8)
-                model.train_model(sequence, iterations=TRAIN_ITERATIONS)
-                best_model = model
-            else:
-                model = HMM(NR_STATES, 8)
-                model.set_matrices(best_model.A, best_model.B, best_model.pi)
-                model.train_model(sequence, iterations=TRAIN_ITERATIONS)
-
-                if model.log > best_model.log:
+            best_model = None
+            for _ in range(self.nr_of_models_to_train):
+                if best_model == None:
+                    model = HMM(NR_STATES, 8)
+                    model.train_model(sequence, iterations=TRAIN_ITERATIONS)
+                    model.set_matrices(A, B, pi)
                     best_model = model
-        self.models[str(fish_type)]["model"] = best_model
+                else:
+                    model = HMM(NR_STATES, 8)
+                    model.set_matrices(best_model.A, best_model.B, best_model.pi)
+                    model.train_model(sequence, iterations=TRAIN_ITERATIONS)
+
+                    if model.log > best_model.log:
+                        best_model = model
+
+        # if there is no existing model yet, use default values
+        else:
+            # print("Training a new model with random init")
+            best_model = None
+            for _ in range(self.nr_of_models_to_train):
+                if best_model == None:
+                    model = HMM(NR_STATES, 8)
+                    model.train_model(sequence, iterations=TRAIN_ITERATIONS)
+                    best_model = model
+                else:
+                    model = HMM(NR_STATES, 8)
+                    model.set_matrices(best_model.A, best_model.B, best_model.pi)
+                    model.train_model(sequence, iterations=TRAIN_ITERATIONS)
+
+                    if model.log > best_model.log:
+                        best_model = model
+        self.trained_models.append(best_model)
 
     def predict(self, fish_id,  data_vault):
         sequence = data_vault.get_fish_observations(fish_id)
         probs = [
-            model["model"].run_inference(sequence)
-            if model['model'] else 0
-            for fish_type, model in self.models.items() 
+            model.run_inference(sequence)
+            for model in self.trained_models
         ]
-        prediction = probs.index(max(probs))
+        idx = probs.index(max(probs))
 
-        return prediction
-
-    def retrain_models(self, data_vault):
-        if self.model_split_id == 0:
-            for model_id in self.model_split[self.model_split_id]:
-                fish_id = data_vault.get_labels()[model_id]
-                self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
-            self.model_split_id = 1
-        if self.model_split_id == 1:
-            for model_id in self.model_split[self.model_split_id]:
-                fish_id = data_vault.get_labels()[model_id]
-                self.train_and_store_model(model_id, data_vault.get_fish_observations(fish_id))
-            self.model_split_id = 0
+        return idx
 
 
 class HMM:
-    def __init__(self, nr_states, nr_emissions):
+    def __init__(self, nr_states: int, nr_emissions: int) -> None:
         self.nr_states = nr_states
         self.nr_emissions = nr_emissions
         self.A = None
@@ -483,10 +490,8 @@ class HMM:
         self.pi = None
         self.log = None
 
-    def initialize_model(self, init_method, O=None):
-        """Initialize model parameters
-        TODO: Make more advanced later on
-        """
+    def initialize_model(self, init_method: str) -> None:
+        """Initialize model parameters"""
         if self.nr_states == 4 and init_method == "halves":
             self.A = [
                 [0.25, 0.25, 0, 25, 0.05, 0.05, 0.05, 0.05, 0.05],
@@ -514,13 +519,13 @@ class HMM:
             self.B = uniform_random_inicialization(self.nr_states, self.nr_emissions)
             self.pi = uniform_random_inicialization(1, self.nr_states)
 
-    def train_model(self, O, iterations=500):
-        self.initialize_model(INIT_STRATEGY, O)
+    def train_model(self, O: List, iterations: int=500) -> None:
+        self.initialize_model(INIT_STRATEGY)
         self.A, self.B, self.pi, self.log = baum_welch(
             self.A, self.B, self.pi, O, iterations
         )
 
-    def run_inference(self, O):
+    def run_inference(self, O: List) -> float:
         """Check if oberservation sequence is likely to be produced by the model
         TODO:  Change  to  forward_algorithm"""
         return foward_algorithm_prob(
@@ -532,10 +537,13 @@ class HMM:
         # )
         # return log_PO_given_lambda(scaling_vector)
 
-    def set_matrices(self, A, B, pi):
+    def set_matrices(self, A: List[List], B: List[List], pi: List[List]) -> None:
         self.A = A
         self.B = B
         self.pi = pi
+
+    def get_matrices(self):
+        return self.A, self.B, self.pi
 
 
 class PlayerControllerHMM(PlayerControllerHMMAbstract):
@@ -544,10 +552,7 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         In this function you should initialize the parameters you will need,
         such as the initialization of models, or fishes, among others.
         """
-        self.sequence_dic = None
-        self.models = {f"{i}": {"model": None} for i in range(7)}
         self.models_to_train = 20
-        self.start_guessing_step = 90
         self.model_vault = ModelVault(self.models_to_train)
         self.data_vault = DataVault()
         self.labels = None
@@ -563,19 +568,16 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :return: None or a tuple (fish_id, fish_type)
         """
         self.step = step
-        # print(step)
         self.data_vault.store_new_observations(observations)
         if step == 1:
             self.data_vault.populate_fish_ids(len(observations))
-        if step == 110:
+        if step == 108:
             fish_id = self.data_vault.pop_fish_id()
             return fish_id, random.randint(0, 6)
-        if step > 110:
-            # if step in (105, 110, 115, 120):
-            #     # print(self.guess_machine.get_labels())
-            #     self.model_vault.retrain_models(self.data_vault)
+        if step > 108:
             fish_id = self.data_vault.pop_fish_id()
-            pred = self.model_vault.predict(fish_id,  self.data_vault)
+            idx = self.model_vault.predict(fish_id,  self.data_vault)
+            pred = self.data_vault.get_all_fish_types()[idx]
             return fish_id, pred
 
     def reveal(self, correct, fish_id, true_type):
@@ -588,10 +590,7 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         :param true_type: the correct type of the fish
         :return:
         """
-        if self.step == 1:
-            self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
-        else:
-            if true_type not in self.data_vault.get_labels():
-                self.model_vault.train_init_models(self.data_vault, true_type, fish_id)
-
-
+        self.data_vault.process_guess(fish_id, true_type)
+        if self.step >= 108:
+            self.model_vault.train_and_store_model(true_type, self.data_vault, self.data_vault.get_fish_observations(fish_id))
+            self.data_vault.append_fish_type(true_type)
