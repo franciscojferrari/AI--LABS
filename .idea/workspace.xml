@@ -41,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="290" column="25" selection-start-line="290" selection-start-column="4" selection-end-line="290" selection-end-column="25" />
+            <state relative-caret-position="291">
+              <caret line="356" column="17" lean-forward="true" selection-start-line="356" selection-start-column="17" selection-end-line="356" selection-end-column="17" />
               <folding>
                 <element signature="e#24#85#0" expanded="true" />
               </folding>
@@ -107,12 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>guess_machine</find>
-      <find>self.labels</find>
-      <find>.get_labels</find>
-      <find>modelvault</find>
-      <find>get_fish_observations</find>
-      <find>predict</find>
       <find>datavault</find>
       <find>retrain</find>
       <find>start_guessing_step</find>
@@ -137,6 +131,12 @@
       <find>train_and</find>
       <find>30</find>
       <find>run_inference</find>
+      <find>baum_welch</find>
+      <find>get_labels</find>
+      <find>set_fish_ids</find>
+      <find>pop_fish_id</find>
+      <find>append_fish_type</find>
+      <find>set_matric</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -332,12 +332,12 @@
       <workItem from="1599056197583" duration="4245000" />
       <workItem from="1599118457553" duration="33763000" />
       <workItem from="1599549925059" duration="56800000" />
-      <workItem from="1599916302540" duration="14899000" />
+      <workItem from="1599916302540" duration="16011000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117378000" />
+    <option name="totallyTimeSpent" value="118490000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -366,7 +366,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.20213903" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.32406417" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.65989304" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -610,8 +610,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="290" column="25" selection-start-line="290" selection-start-column="4" selection-end-line="290" selection-end-column="25" />
+        <state relative-caret-position="291">
+          <caret line="356" column="17" lean-forward="true" selection-start-line="356" selection-start-column="17" selection-end-line="356" selection-end-column="17" />
           <folding>
             <element signature="e#24#85#0" expanded="true" />
           </folding>

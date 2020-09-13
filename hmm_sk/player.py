@@ -66,35 +66,39 @@ def parse_input(input_value: str) -> List[List]:
 
                 matrixes.append(
                     [
-                        matrix_values[i: i + dimensions]
+                        matrix_values[i : i + dimensions]
                         for i in range(0, len(matrix_values), dimensions)
                     ]
                 )
     return matrixes
 
 
-def foward_algorithm_prob(A: list, B: list, pi: list, O: list, stop_step: int = -1) -> float:
+def foward_algorithm_prob(
+    A: list, B: list, pi: list, O: list, stop_step: int = -1
+) -> float:
     alpha_list = []
     for _ in range(10):
         num = randrange(len(O) - stop_step)
-        new_O = O[num:num + stop_step]
+        new_O = O[num : num + stop_step]
         for index, emission in enumerate(new_O):
             if index == 0:
                 alpha = elem_wise_product(pi[0], T(B)[emission])
             else:
-                alpha = elem_wise_product(matrix_mulitplication([alpha], A)[0], T(B)[emission])
+                alpha = elem_wise_product(
+                    matrix_mulitplication([alpha], A)[0], T(B)[emission]
+                )
         alpha_list.append(sum(alpha))
 
     return mean(alpha_list)
 
 
 def forward_algorithm(
-        A: List[List],
-        B: List[List],
-        pi: List,
-        O: List[List],
-        scaled_alpha_matrix: List = [],
-        scaling_vector: List = [],
+    A: List[List],
+    B: List[List],
+    pi: List,
+    O: List[List],
+    scaled_alpha_matrix: List = [],
+    scaling_vector: List = [],
 ) -> Tuple[List[List], List]:
     """Foward Algo
 
@@ -139,11 +143,11 @@ def forward_algorithm(
 
 
 def backward_algorithm(
-        A: List[List],
-        B: List[List],
-        O: List,
-        scaling_vector: List,
-        scaled_beta_matrix: List[List] = [],
+    A: List[List],
+    B: List[List],
+    O: List,
+    scaling_vector: List,
+    scaled_beta_matrix: List[List] = [],
 ) -> List[List]:
     bt_minus_1 = [scaling_vector[-1] for _ in A]
     scaled_beta_matrix.append(bt_minus_1)
@@ -163,13 +167,13 @@ def backward_algorithm(
 
 
 def di_gamma_algorithm(
-        A: List[List],
-        B: List[List],
-        O: List,
-        scaled_alpha_matrix: List[List],
-        scaled_beta_matrix: List[List],
-        gamma_list: List = [],
-        di_gamma_list: List = [],
+    A: List[List],
+    B: List[List],
+    O: List,
+    scaled_alpha_matrix: List[List],
+    scaled_beta_matrix: List[List],
+    gamma_list: List = [],
+    di_gamma_list: List = [],
 ) -> Tuple[List[List], List[List]]:
     for t in range(len(O[:-1])):
         di_gamma = [[] for _ in A]
@@ -177,10 +181,10 @@ def di_gamma_algorithm(
         for i, a_row in enumerate(A):
             for j in range(len(A)):
                 di_gamma_temp = (
-                        scaled_alpha_matrix[t][i]
-                        * a_row[j]
-                        * B[j][O[t + 1]]
-                        * scaled_beta_matrix[t + 1][j]
+                    scaled_alpha_matrix[t][i]
+                    * a_row[j]
+                    * B[j][O[t + 1]]
+                    * scaled_beta_matrix[t + 1][j]
                 )
                 di_gamma[i].append(di_gamma_temp)
         gamma = [sum(row) for row in di_gamma]
@@ -197,7 +201,7 @@ def re_estimate_pi(gamma_list: List[List]) -> List[List]:
 
 
 def re_estimate_A(
-        A: List[List], gamma_list: List[List], di_gamma_list: List[List]
+    A: List[List], gamma_list: List[List], di_gamma_list: List[List]
 ) -> List[List]:
     re_estimated_A = []
 
@@ -232,13 +236,17 @@ def log_PO_given_lambda(scaling_vector: List) -> float:
 
 
 def baum_welch(
-        A: List[List], B: List[List], pi: List, O: List, maxIters: int
+    A: List[List], B: List[List], pi: List, O: List, maxIters: int
 ) -> Tuple[List[List], List[List]]:
     iters = 0
     logProb = -99999999999
     oldLogProb = -math.inf
 
-    while iters < maxIters and logProb > oldLogProb and abs(oldLogProb - logProb) > 0.000000005:
+    while (
+        iters < maxIters
+        and logProb > oldLogProb
+        and abs(oldLogProb - logProb) > 0.000000005
+    ):
         # print(oldLogProb - logProb)
         oldLogProb = logProb
 
@@ -260,7 +268,7 @@ def baum_welch(
 
 
 def baum_welch_exp(
-        A: List[List], B: List[List], pi: List, O: List, maxIters: int = 4000
+    A: List[List], B: List[List], pi: List, O: List, maxIters: int = 4000
 ) -> Tuple[List[List], List[List]]:
     iters = 0
     logProb = -99999999999
@@ -297,7 +305,7 @@ def random_initialization(n: int, m: int):
 
 
 def diagonal_matrix(n: int):
-    print('a')
+    print("a")
     matrix = []
     for i in range(n):
         print(i)
@@ -333,17 +341,21 @@ def count_based_initialization(n: int, m: int, same_state_probability: float = 0
 def pretty_print_matrix(mat: List[List]):
     s = [[str(e) for e in row] for row in mat]
     lens = [max(map(len, col)) for col in zip(*s)]
-    fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
+    fmt = "\t".join("{{:{}}}".format(x) for x in lens)
     table = [fmt.format(*row) for row in s]
-    print('\n'.join(table))
+    print("\n".join(table))
 
 
 def euclidean_distance(mat_a, mat_b):
-    values = [math.pow((a - b), 2) for row_a, row_b in zip(mat_a, mat_b) for a, b in
-              zip(row_a, row_b)]
+    values = [
+        math.pow((a - b), 2)
+        for row_a, row_b in zip(mat_a, mat_b)
+        for a, b in zip(row_a, row_b)
+    ]
     result = math.sqrt(sum(values) / len(mat_a))
 
     return result
+
 
 NR_STATES = 2
 INIT_STRATEGY = "default"
@@ -359,11 +371,11 @@ class DataVault:
         self.labels = {}
         self.all_fish_types = []
 
-    def populate_fish_ids(self, nr_fish):
+    def populate_fish_ids(self, nr_fish: int) -> None:
         """Need to know the number of fish in the game"""
         self.fish_ids = [i for i in range(nr_fish)]
 
-    def store_new_observations(self, observations):
+    def store_new_observations(self, observations: List) -> None:
         if not self.observations:
             self.observations = [[observation] for observation in observations]
 
@@ -376,25 +388,33 @@ class DataVault:
     def get_fish_observations(self, fish_id):
         return self.observations[int(fish_id)]
 
-    def set_fish_ids(self, fish_ids):
-        self.fish_ids = fish_ids
-
-    def get_labels(self):
-        return self.labels
-
-    def pop_fish_id(self):
+    def pop_fish_id(self) -> None:
         return self.fish_ids.pop(0)
 
-    def append_fish_type(self, fish_type):
+    def append_fish_type(self, fish_type) -> None:
         self.all_fish_types.append(fish_type)
 
-    def get_all_fish_types(self):
+    def get_all_fish_types(self) -> List:
         return self.all_fish_types
 
-    def process_guess(self, fish_id, true_type):
+    def process_guess(self, fish_id: int, true_type: int) -> None:
         if true_type not in self.labels:
             self.labels[true_type] = fish_id
 
+
+def create_transition_matrix(sequence):
+    matrice = [[0 for _ in range(8)] for _ in range(8)]
+    for elem1, elem2 in zip(sequence[:-1], sequence[1:]):
+        matrice[elem1][elem2] += 1
+
+    return matrice
+
+
+def count_states(sequence):
+    count_vec = [0 for _ in range(8)]
+    for elem in sequence:
+        count_vec[elem] += 1
+    return [count_vec]
 
 
 class ModelVault:
@@ -404,9 +424,10 @@ class ModelVault:
 
     def train_and_store_model(self, true_type, data_vault, sequence):
 
+        pi_count_based = count_states(sequence)
+
         # find an existing model that can be used for retraining
         if true_type in data_vault.get_all_fish_types() and RETRAINING:
-            # print("Training a new model with init from other model")
             idx = data_vault.get_all_fish_types().index(true_type)
             model_for_init = self.trained_models[idx]
             A, B, pi = model_for_init.get_matrices()
@@ -416,7 +437,7 @@ class ModelVault:
                 if best_model == None:
                     model = HMM(NR_STATES, 8)
                     model.train_model(sequence, iterations=TRAIN_ITERATIONS)
-                    model.set_matrices(A, B, pi)
+                    model.set_matrices(A, B, pi_count_based)
                     best_model = model
                 else:
                     model = HMM(NR_STATES, 8)
@@ -428,36 +449,32 @@ class ModelVault:
 
         # if there is no existing model yet, use default values
         else:
-            # print("Training a new model with random init")
             best_model = None
             for _ in range(self.nr_of_models_to_train):
                 if best_model == None:
                     model = HMM(NR_STATES, 8)
+                    model.set_matrices(None, None, pi_count_based)
                     model.train_model(sequence, iterations=TRAIN_ITERATIONS)
                     best_model = model
                 else:
                     model = HMM(NR_STATES, 8)
-                    model.set_matrices(best_model.A, best_model.B, best_model.pi)
+                    model.set_matrices(best_model.A, best_model.B, pi_count_based)
                     model.train_model(sequence, iterations=TRAIN_ITERATIONS)
 
                     if model.log > best_model.log:
                         best_model = model
         self.trained_models.append(best_model)
 
-    def predict(self, fish_id,  data_vault):
+    def predict(self, fish_id, data_vault):
         sequence = data_vault.get_fish_observations(fish_id)
         try:
-            probs = [
-                model.run_inference(sequence)
-                for model in self.trained_models
-            ]
+            probs = [model.run_inference(sequence) for model in self.trained_models]
             return probs.index(max(probs))
         except:
             probs = [
                 model.run_inference(sequence, prob=True)
                 for model in self.trained_models
-        ]
-
+            ]
             return probs.index(max(probs))
 
 
@@ -499,7 +516,7 @@ class HMM:
             self.B = uniform_random_initialization(self.nr_states, self.nr_emissions)
             self.pi = uniform_random_initialization(1, self.nr_states)
 
-    def train_model(self, O: List, iterations: int=500) -> None:
+    def train_model(self, O: List, iterations: int = 500) -> None:
         self.initialize_model(INIT_STRATEGY)
         self.A, self.B, self.pi, self.log = baum_welch(
             self.A, self.B, self.pi, O, iterations
@@ -519,9 +536,9 @@ class HMM:
             )
 
     def set_matrices(self, A: List[List], B: List[List], pi: List[List]) -> None:
-        self.A = A
-        self.B = B
-        self.pi = pi
+        self.A = A if A else self.A
+        self.B = B if B else self.B
+        self.pi = pi if pi else self.pi
 
     def get_matrices(self):
         return self.A, self.B, self.pi
@@ -557,7 +574,7 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
             return fish_id, random.randint(0, 6)
         if step > 108:
             fish_id = self.data_vault.pop_fish_id()
-            idx = self.model_vault.predict(fish_id,  self.data_vault)
+            idx = self.model_vault.predict(fish_id, self.data_vault)
             pred = self.data_vault.get_all_fish_types()[idx]
             return fish_id, pred
 
@@ -573,5 +590,9 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         """
         self.data_vault.process_guess(fish_id, true_type)
         if self.step >= 108:
-            self.model_vault.train_and_store_model(true_type, self.data_vault, self.data_vault.get_fish_observations(fish_id))
+            self.model_vault.train_and_store_model(
+                true_type,
+                self.data_vault,
+                self.data_vault.get_fish_observations(fish_id),
+            )
             self.data_vault.append_fish_type(true_type)
