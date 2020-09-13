@@ -27,11 +27,16 @@ class HMM:
         self.initialize_model()
 
     def set_matrices(self, A: List[List], B: List[List], pi: List[List]) -> None:
+        """Setter method for initial model parameters."""
         self.A = A
         self.B = B
         self.pi = pi
 
     def initialize_model(self) -> None:
+        """Initialize model parameters.
+
+        A and B are initialized using a uniform/random init function, where pi is set with a count
+        based init method."""
         if not self.A:
             self.A = uniform_random_initialization(self.nr_states, self.nr_states)
         if not self.B:
@@ -53,6 +58,6 @@ class HMM:
             )
         else:
             _, scaling_vector = forward_algorithm(
-                self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), [], []
+                self.A.copy(), self.B.copy(), self.pi.copy(), O.copy()
             )
             return log_PO_given_lambda(scaling_vector)

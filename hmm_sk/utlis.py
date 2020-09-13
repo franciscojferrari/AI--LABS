@@ -5,8 +5,6 @@ import random as random
 from random import randrange
 from statistics import mean
 
-LOGGER = logging.getLogger(__name__)
-
 def T(matrix: List[List]) -> List[List]:
     """Transpose of matrix
 
