@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hmm_sk/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hmm_sk/datavault.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/datavault.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hmm_sk/modelvault.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/modelvault.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hmm_sk/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hmm_sk/test_strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/hmm_sk/test_strategy.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,19 +21,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hmm_sk/sequences.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hmm_sk/utlis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5235">
-              <caret line="354" column="23" selection-start-line="354" selection-start-column="4" selection-end-line="354" selection-end-column="23" />
+            <state relative-caret-position="768">
+              <caret line="266" selection-start-line="266" selection-end-line="266" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -40,11 +32,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="576" column="45" lean-forward="true" selection-start-line="576" selection-start-column="45" selection-end-line="576" selection-end-column="45" />
+            <state relative-caret-position="430">
+              <caret line="68" column="82" selection-start-line="68" selection-start-column="82" selection-end-line="68" selection-end-column="82" />
               <folding>
                 <element signature="e#24#85#0" expanded="true" />
               </folding>
@@ -53,38 +45,48 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
+        <entry file="file://$PROJECT_DIR$/hmm_sk/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="142" lean-forward="true" selection-start-line="142" selection-end-line="142" />
+            <state relative-caret-position="30">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hmm_sk/sequences.py">
+        <entry file="file://$PROJECT_DIR$/hmm_sk/modelvault.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="675">
+              <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="60" selection-end-line="45" selection-end-column="60" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hmm_sk/constants.py">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hmm_sk/datafile.py">
+        <entry file="file://$PROJECT_DIR$/hmm_sk/hmm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="503">
+              <caret line="51" column="70" lean-forward="true" selection-start-line="51" selection-start-column="70" selection-end-line="51" selection-end-column="70" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#0#179#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/HMM/baum_welch_experiments.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/hmm_sk/datavault.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1095">
-              <caret line="92" column="33" selection-start-line="92" selection-start-column="12" selection-end-line="92" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="570">
+              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
             </state>
           </provider>
         </entry>
@@ -100,9 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>b</find>
-      <find>foward_algorithm</find>
-      <find>populate_fish_ids</find>
       <find>print</find>
       <find>forward_algorithm</find>
       <find>train_model</find>
@@ -119,7 +118,6 @@
       <find>foward_algorithm_prob</find>
       <find>run_inference</find>
       <find>retrain_models</find>
-      <find>train_init_models</find>
       <find>STEPS</find>
       <find>get_correct_fish</find>
       <find>trained_models</find>
@@ -130,6 +128,10 @@
       <find>get_fish_observations</find>
       <find>predict</find>
       <find>print(</find>
+      <find>set_matrices</find>
+      <find>HMM</find>
+      <find>train_init_models</find>
+      <find>train_and_store_model</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -151,7 +153,11 @@
         <option value="$PROJECT_DIR$/HMM/baum_welch_experiments.py" />
         <option value="$PROJECT_DIR$/hmm_sk/utlis.py" />
         <option value="$PROJECT_DIR$/hmm_sk/test_strategy.py" />
+        <option value="$PROJECT_DIR$/hmm_sk/hmm.py" />
         <option value="$PROJECT_DIR$/hmm_sk/player.py" />
+        <option value="$PROJECT_DIR$/hmm_sk/config.py" />
+        <option value="$PROJECT_DIR$/hmm_sk/modelvault.py" />
+        <option value="$PROJECT_DIR$/hmm_sk/datavault.py" />
       </list>
     </option>
   </component>
@@ -166,7 +172,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -188,6 +193,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -326,11 +332,12 @@
       <workItem from="1599118457553" duration="33763000" />
       <workItem from="1599549925059" duration="56800000" />
       <workItem from="1599916302540" duration="5316000" />
+      <workItem from="1599999097264" duration="1599000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107795000" />
+    <option name="totallyTimeSpent" value="109394000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -345,7 +352,7 @@
     <frame x="57" y="23" width="1623" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20303605" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.2055661" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -359,7 +366,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.03208556" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" weight="0.20320855" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.65989304" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -367,6 +374,29 @@
       <window_info anchor="right" id="SciView" order="3" />
       <window_info anchor="right" id="Database" order="4" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2055661" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.81925136" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32941177" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.20320855" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.65989304" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -464,9 +494,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hmm_sk/constants.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -562,13 +589,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hmm_sk/utlis.py">
+    <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5235">
-          <caret line="354" column="23" selection-start-line="354" selection-start-column="4" selection-end-line="354" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="23">
+          <caret line="142" selection-start-line="142" selection-end-line="142" />
         </state>
       </provider>
     </entry>
@@ -586,28 +610,65 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HMM/baum_welch_experiments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1095">
-          <caret line="92" column="33" selection-start-line="92" selection-start-column="12" selection-end-line="92" selection-end-column="33" />
+        <state relative-caret-position="668">
+          <caret line="92" column="33" selection-start-line="92" selection-start-column="33" selection-end-line="92" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/utlis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="768">
+          <caret line="266" selection-start-line="266" selection-end-line="266" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hmm_sk/test_strategy.py">
+    <entry file="file://$PROJECT_DIR$/hmm_sk/hmm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="142" lean-forward="true" selection-start-line="142" selection-end-line="142" />
+        <state relative-caret-position="503">
+          <caret line="51" column="70" lean-forward="true" selection-start-line="51" selection-start-column="70" selection-end-line="51" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#179#0" expanded="true" />
+          </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/constants.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/hmm_sk/player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="576" column="45" lean-forward="true" selection-start-line="576" selection-start-column="45" selection-end-line="576" selection-end-column="45" />
+        <state relative-caret-position="430">
+          <caret line="68" column="82" selection-start-line="68" selection-start-column="82" selection-end-line="68" selection-end-column="82" />
           <folding>
             <element signature="e#24#85#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/modelvault.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="60" selection-end-line="45" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hmm_sk/datavault.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
         </state>
       </provider>
     </entry>
