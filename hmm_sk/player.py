@@ -3,24 +3,19 @@
 from player_controller_hmm import PlayerControllerHMMAbstract
 from datavault import DataVault
 from modelvault import ModelVault
+from typing import List
 from constants import *
-import random as random
-from utlis import *
-
-import math
 import logging
-from typing import List, Tuple
 import random as random
-from random import randrange
-from statistics import mean
 
 LOGGER = logging.getLogger(__name__)
 
 NR_STATES = 2
 TRAIN_ITERATIONS = 30
 
+
 class PlayerControllerHMM(PlayerControllerHMMAbstract):
-    def init_parameters(self):
+    def init_parameters(self) -> None:
         """
         In this function you should initialize the parameters you will need,
         such as the initialization of models, or fishes, among others.
@@ -31,7 +26,7 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         self.data_vault = DataVault()
         self.step = None
 
-    def guess(self, step, observations):
+    def guess(self, step: int, observations: List) -> None:
         """
         This method gets called on every iteration, providing observations.
         Here the player should process and store this information,
@@ -49,10 +44,10 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
             return fish_id, random.randint(0, 6)
         if step > 110:
             fish_id = self.data_vault.pop_fish_id()
-            pred = self.model_vault.predict(fish_id,  self.data_vault)
+            pred = self.model_vault.predict(fish_id, self.data_vault)
             return fish_id, pred
 
-    def reveal(self, correct, fish_id, true_type):
+    def reveal(self, correct: bool, fish_id: int, true_type: int) -> None:
         """
         This methods gets called whenever a guess was made.
         It informs the player about the guess result
@@ -73,6 +68,3 @@ class PlayerControllerHMM(PlayerControllerHMMAbstract):
         if self.step > 120 and len(self.data_vault.get_labels()) > 6:
             if self.step % 10 == 0:
                 self.model_vault.retrain_models(self.data_vault)
-                
-
-

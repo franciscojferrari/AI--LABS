@@ -44,7 +44,7 @@ class HMM:
             self.A, self.B, self.pi, O, iterations
         )
 
-    def run_inference(self, O: List, probs: bool=False) -> float:
+    def run_inference(self, O: List, probs: bool = False) -> float:
         """Check if oberservation sequence is likely to be produced by the model
         """
         if probs:

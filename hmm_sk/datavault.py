@@ -1,5 +1,6 @@
 from typing import List
 
+
 class DataVault:
     def __init__(self) -> None:
         self.observations = None
