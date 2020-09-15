@@ -4,7 +4,7 @@ import random
 from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
-import test
+from ai_player import MinMaxModel
 
 
 class PlayerControllerHuman(PlayerController):
@@ -46,7 +46,7 @@ class PlayerControllerMinimax(PlayerController):
 
             # Create the root node of the game tree
             node = Node(message=msg, player=0)
-            
+
             # Possible next moves: "stay", "left", "right", "up", "down"
             best_move = self.search_best_next_move(
                 model=model, initial_tree_node=node)
@@ -72,9 +72,8 @@ class PlayerControllerMinimax(PlayerController):
         Please note that the number of fishes and their types is not fixed between test cases.
         """
         # EDIT THIS METHOD TO RETURN A MINIMAX MODEL ###
-        minimax = test.MinimaxModel(initial_data, 20)
         
-        return minimax
+        return MinMaxModel(5)
 
     def search_best_next_move(self, model, initial_tree_node):
         """
@@ -92,7 +91,7 @@ class PlayerControllerMinimax(PlayerController):
         
         # NOTE: Don't forget to initialize the children of the current node 
         #       with its compute_and_get_children() method!
-        # initial_tree_node.compute_and_get_children()
-        return model.next_move(initial_tree_node)
+        move = model.best_next_move(initial_tree_node)
+
         # random_move = random.randrange(5)
-        # return ACTION_TO_STR[random_move]
+        return ACTION_TO_STR[move]
