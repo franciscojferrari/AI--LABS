@@ -2,7 +2,7 @@ import math
 from typing import List, Tuple
 import random as random
 from random import randrange
-
+import sys
 
 def T(matrix: List[List]) -> List[List]:
     """Transpose of matrix
@@ -101,7 +101,10 @@ def forward_algorithm(
     scaling_vector = []
 
     alpha = list(map(lambda x, y: x * y, pi[0], T(B)[O[0]]))
-    c0 = 1 / sum(alpha)
+    try:
+        c0 = 1 / sum(alpha)
+    except:
+        c0 = 1 / (sum(alpha)+sys.float_info.epsilon)
 
     alpha = list(map(lambda x: x * c0, alpha))
 
@@ -120,7 +123,10 @@ def forward_algorithm(
             alpha_temp = alpha_temp * B[i][O[t]]
             alpha.append(alpha_temp)
             ct += alpha_temp
-        ct = 1 / ct
+        try:
+             ct = 1 / ct
+        except:
+            ct = 1 / (ct+sys.float_info.epsilon)
         scaling_vector.append(ct)
         alpha = list(map(lambda a: a * ct, alpha))
         scaled_alpha_matrix.append(alpha)

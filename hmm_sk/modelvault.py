@@ -38,18 +38,11 @@ class ModelVault:
 
     def predict(self, fish_id: int, data_vault: DataVault) -> int:
         sequence = data_vault.get_fish_observations(fish_id)
-        try:
-            probs = [
-                model["model"].run_inference(sequence) if model["model"] else -math.inf
-                for fish_type, model in self.models.items()
-            ]
-            return probs.index(max(probs))
-        except:
-            probs = [
-                model["model"].run_inference(sequence, True) if model["model"] else 0
-                for fish_type, model in self.models.items()
-            ]
-            return probs.index(max(probs))
+        probs = [
+            model["model"].run_inference(sequence) if model["model"] else -math.inf
+            for fish_type, model in self.models.items()
+        ]
+        return probs.index(max(probs))
 
     def retrain_models(self, data_vault: DataVault) -> None:
         for model_id in range(len(self.models)):
