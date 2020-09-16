@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minimax_assignment/ai_player.py" beforeDir="false" afterPath="$PROJECT_DIR$/minimax_assignment/ai_player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minimax_assignment/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/minimax_assignment/player.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,20 +35,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/minimax_assignment/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
+            <state relative-caret-position="267">
               <caret line="84" column="63" selection-start-line="84" selection-start-column="62" selection-end-line="84" selection-end-column="63" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/minimax_assignment/ai_player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="765">
+              <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -165,8 +163,8 @@
         <option value="$PROJECT_DIR$/hmm_sk/utlis.py" />
         <option value="$PROJECT_DIR$/hmm_sk/utils.py" />
         <option value="$PROJECT_DIR$/minimax_assignment/settings.yml" />
-        <option value="$PROJECT_DIR$/minimax_assignment/ai_player.py" />
         <option value="$PROJECT_DIR$/minimax_assignment/player.py" />
+        <option value="$PROJECT_DIR$/minimax_assignment/ai_player.py" />
       </list>
     </option>
   </component>
@@ -339,12 +337,12 @@
       <workItem from="1599999097264" duration="2769000" />
       <workItem from="1600032240894" duration="396000" />
       <workItem from="1600167922494" duration="5109000" />
-      <workItem from="1600246383450" duration="2097000" />
+      <workItem from="1600246383450" duration="3665000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118166000" />
+    <option name="totallyTimeSpent" value="119734000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -373,7 +371,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32941177" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50031626" side_tool="true" weight="0.35080215" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.25882354" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49968374" visible="true" weight="0.37540108" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.65989304" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -698,20 +696,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/minimax_assignment/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1080" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/minimax_assignment/settings.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/minimax_assignment/requirements.txt">
       <provider selected="true" editor-type-id="text-editor" />
@@ -731,20 +721,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/minimax_assignment/player.py">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minimax_assignment/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="84" column="63" selection-start-line="84" selection-start-column="62" selection-end-line="84" selection-end-column="63" />
-        </state>
+        <state relative-caret-position="-1335" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/minimax_assignment/ai_player.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="765">
+          <caret line="51" column="35" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="35" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/minimax_assignment/player.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="84" column="63" selection-start-line="84" selection-start-column="62" selection-end-line="84" selection-end-column="63" />
         </state>
       </provider>
     </entry>
