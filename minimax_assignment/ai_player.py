@@ -5,7 +5,13 @@ import time
 class MinMaxModel(object):
     def __init__(self, depth):
         self.depth = depth
-        self.time_threshold = 75*1e-3
+        self.boundary_location = 20
+        # self.fish_scores = fish_scores
+
+    def simple_heuristic(self, state):
+        # scores = 
+        max_score, min_score = state.get_player_scores()
+        return max_score - min_score
 
     def best_next_move(self, node):
         startTime = time.time()
@@ -51,36 +57,37 @@ class MinMaxModel(object):
         - Include score heuristic
         :return:
         """
-        node = node.state
+        distance_heuristic = self.get_distance_heuristic(node.state)
+        score_heuristic = self.simple_heuristic(node.state)
 
-        hook_positions = node.get_hook_positions()
-        fish_positions = node.get_fish_positions()
-        # fish_scores = node.get_fish_scores()
+        return distance_heuristic + score_heuristic
 
-        # print(f"hook positions: {hook_positions}")
-        # print(f"fish positions: {fish_positions}")
+    def get_distance_heuristic(self, state):
+        hook_positions = state.get_hook_positions()
+        fish_positions = state.get_fish_positions()
+        fish_scores = state.fish_scores
+        scores = []  # heuristics for both players
 
-        # MAX PLAYER SCORE
-        max_pos_x,  max_pos_y = hook_positions[0]
+        for player, hook_position in hook_positions.items():
+            heuristic = 0
+            for fish_id, location in fish_positions.items():
 
-        distance_max = math.inf
-        for _, location in fish_positions.items():
-            fish_x, fish_y = location
-            dist = math.sqrt((fish_x-max_pos_x)**2 + (fish_y-max_pos_y)**2)
-            distance_max = min(dist, distance_max)
+                y_difference = abs(hook_position[0] - location[0])
+                # get the minimum score of the difference in x
+                x_difference = min(
+                    abs(hook_position[1] - location[1]),
+                    abs(hook_position[1] - self.boundary_location - location[1])
+                )
 
-        # print(f"closest fish for max player: {distance_max}")
-        # MIN PLAYER SCORE
-        max_pos_x, max_pos_y = hook_positions[1]
+                distance = math.sqrt(x_difference**2 + y_difference**2)
+                heuristic += fish_scores[fish_id] * distance
+            scores.append(heuristic)
+        return scores[0] - scores[1]
 
-        distance_min = math.inf
-        for _, location in fish_positions.items():
-            fish_x, fish_y = location
-            dist = math.sqrt((fish_x - max_pos_x) ** 2 + (fish_y - max_pos_y) ** 2)
-            distance_min = min(dist, distance_min)
 
-        # print(f"closest fish for min player: {distance_min}")
-        heuristic = distance_min - distance_max
 
-        return heuristic
+
+    def get_score_heuristic(self):
+        pass
+
 
