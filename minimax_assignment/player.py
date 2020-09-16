@@ -43,19 +43,18 @@ class PlayerControllerMinimax(PlayerController):
         # Initialize your minimax model
         model = self.initialize_model(initial_data=first_msg)
 
-        # while True:
-            # print("While loop")
-        msg = self.receiver()
+        while True:
+            msg = self.receiver()
 
-        # Create the root node of the game tree
-        node = Node(message=msg, player=0)
+            # Create the root node of the game tree
+            node = Node(message=msg, player=0)
 
-        # Possible next moves: "stay", "left", "right", "up", "down"
-        best_move = self.search_best_next_move(
-            model=model, initial_tree_node=node)
+            # Possible next moves: "stay", "left", "right", "up", "down"
+            best_move = self.search_best_next_move(
+                model=model, initial_tree_node=node)
 
-        # Execute next action
-        self.sender({"action": best_move, "search_time": None})
+            # Execute next action
+            self.sender({"action": best_move, "search_time": None})
 
     def initialize_model(self, initial_data):
         """
@@ -76,7 +75,7 @@ class PlayerControllerMinimax(PlayerController):
         """
         # EDIT THIS METHOD TO RETURN A MINIMAX MODEL ###
         
-        return MinMaxModel(20)
+        return MinMaxModel(4)
 
     def search_best_next_move(self, model, initial_tree_node):
         """
