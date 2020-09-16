@@ -1,16 +1,15 @@
 import math
 import random
+import time
 
 class MinMaxModel(object):
     def __init__(self, depth):
         self.depth = depth
-
-    def simple_heuristic(self, node):
-        # scores = 
-        max_score, min_score = node.state.get_player_scores()
-        return max_score - min_score
+        self.time_threshold = 75*1e-3
 
     def best_next_move(self, node):
+        startTime = time.time()
+
         possible_values = {}
         alpha = -math.inf
         for child in node.compute_and_get_children():
@@ -18,11 +17,10 @@ class MinMaxModel(object):
             if mini_max_result >= alpha:
                 alpha = mini_max_result
                 possible_values[child.move] = mini_max_result
-        # if all(value == possible_values[0] for value in possible_values.values()):
-        #     return random.randint(0, 4)
         return max(possible_values, key=possible_values.get)
 
     def minimax_algorith(self, node, depth, alpha = -math.inf, betta = math.inf):
+
         if depth == 0 or len(node.compute_and_get_children()) == 0:
             # Calculate Heuristics
             return self.get_heuristic(node)
