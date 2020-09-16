@@ -7,3 +7,4 @@ hmm_sk/__pycache__
 minimax_assignment/__pycache__
 ./hmm_sk/__pycache__
 ./minimax_assignment/__pycache__
+*.pyc
