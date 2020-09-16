@@ -99,9 +99,9 @@ class MinMaxModel(object):
         max_score, min_score = state.get_player_scores()
         fish_caught_max, fish_caught_min = state.get_caught()
         fish_score_max = (
-            self.fish_values[fish_caught_max] if fish_caught_max != None else 0
+            self.fish_values[fish_caught_max] if fish_caught_max else 0
         )
         fish_score_min = (
-            self.fish_values[fish_caught_min] if fish_caught_min != None else 0
+            self.fish_values[fish_caught_min] if fish_caught_min else 0
         )
         return max_score - min_score + fish_score_max - fish_score_min
