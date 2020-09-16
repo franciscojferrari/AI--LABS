@@ -48,6 +48,8 @@ class PlayerControllerMinimax(PlayerController):
 
             # Create the root node of the game tree
             node = Node(message=msg, player=0)
+            # print(node.state.get_fish_positions())
+            # print(node.state.get_hook_positions())
 
             # Possible next moves: "stay", "left", "right", "up", "down"
             best_move = self.search_best_next_move(
@@ -74,8 +76,8 @@ class PlayerControllerMinimax(PlayerController):
         Please note that the number of fishes and their types is not fixed between test cases.
         """
         # EDIT THIS METHOD TO RETURN A MINIMAX MODEL ###
-        
-        return MinMaxModel(4)
+
+        return MinMaxModel(3)
 
     def search_best_next_move(self, model, initial_tree_node):
         """
