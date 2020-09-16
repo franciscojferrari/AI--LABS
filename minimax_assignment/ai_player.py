@@ -12,25 +12,20 @@ class MinMaxModel(object):
 
     def best_next_move(self, node):
         possible_values = {}
+        alpha = -math.inf
         for child in node.compute_and_get_children():
-            # print(child.state.get_hook_positions())
-            mini_max_result = self.minimax_algorith(child, self.depth)
-            # print(child.state.get_player_scores)
-            possible_values[child.move] = mini_max_result
-        # print(possible_values)
+            mini_max_result = self.minimax_algorith(child, self.depth, alpha)
+            if mini_max_result >= alpha:
+                alpha = mini_max_result
+                possible_values[child.move] = mini_max_result
         if all(value == possible_values[0] for value in possible_values.values()):
-            print("random move")
             return random.randint(0, 4)
-        print("best move")
         return max(possible_values, key=possible_values.get)
 
     def minimax_algorith(self, node, depth, alpha = -math.inf, betta = math.inf):
         if(depth == 0 or len(node.compute_and_get_children()) == 0):
             ##Calculate Heuristics
-            # print(self.simple_heuristic(node))
-            return self.simple_heuristic(node)
-            # return self.compute_heuristic(node.state)
-        # print(depth)
+            return self.get_heuristic(node)
         if node.state.player == 0:
             maxEval = -math.inf
             for child in node.compute_and_get_children():
@@ -52,5 +47,27 @@ class MinMaxModel(object):
                     break
             return minEval
 
+    def get_heuristic(self, node):
+        """
+        - Distance of hook to closest fish
+        - Distance to high value fish
+        :return:
+        """
+        node = node.state
 
-   
+        hook_positions = node.get_hook_positions()
+        fish_positions = node.get_fish_positions()
+        # fish_scores = node.get_fish_scores()
+
+        # print(f"hook positions: {hook_positions}")
+        # print(f"fish positions: {fish_positions}")
+
+        max_pos_x,  max_pos_y = hook_positions[0]
+
+        min_distance = math.inf
+        for _, location in fish_positions.items():
+            fish_x, fish_y = location
+            distance = math.sqrt((fish_x-max_pos_x)**2 + (fish_y-max_pos_y)**2)
+            min_distance = min(distance, min_distance)
+
+        return min_distance
