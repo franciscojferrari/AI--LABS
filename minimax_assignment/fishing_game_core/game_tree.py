@@ -21,6 +21,9 @@ class State:
         # The score values associated with each fish index.
         self.fish_scores = {}
 
+    def print_all(self):
+        return self.player, self.player_scores, self.hook_positions, self.fish_positions, self.fish_scores
+        
     def set_hook_positions(self, player_pos):
         """
         Set the hooks positions for each player

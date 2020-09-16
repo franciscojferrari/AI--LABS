@@ -4,7 +4,9 @@ import random
 from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
+# from ai_player import MinMaxModel
 from ai_player import MinMaxModel
+
 
 
 class PlayerControllerHuman(PlayerController):
@@ -42,6 +44,7 @@ class PlayerControllerMinimax(PlayerController):
         model = self.initialize_model(initial_data=first_msg)
 
         # while True:
+            # print("While loop")
         msg = self.receiver()
 
         # Create the root node of the game tree
@@ -86,7 +89,6 @@ class PlayerControllerMinimax(PlayerController):
         :return: either "stay", "left", "right", "up" or "down"
         :rtype: str
         """
-
         # EDIT THIS METHOD TO RETURN BEST NEXT POSSIBLE MODE FROM MINIMAX MODEL ###
         
         # NOTE: Don't forget to initialize the children of the current node 
