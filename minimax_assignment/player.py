@@ -7,6 +7,8 @@ from fishing_game_core.shared import ACTION_TO_STR
 # from ai_player import MinMaxModel
 from ai_player import MinMaxModel
 
+# import opponent
+
 
 
 class PlayerControllerHuman(PlayerController):
@@ -43,6 +45,8 @@ class PlayerControllerMinimax(PlayerController):
         # Initialize your minimax model
         model = self.initialize_model(initial_data=first_msg)
 
+        # model = opponent.MinimaxModel(first_msg, 20)
+
         while True:
             msg = self.receiver()
 
@@ -77,7 +81,7 @@ class PlayerControllerMinimax(PlayerController):
         """
         # EDIT THIS METHOD TO RETURN A MINIMAX MODEL ###
 
-        return MinMaxModel(3)
+        return MinMaxModel(4)
 
     def search_best_next_move(self, model, initial_tree_node):
         """
@@ -95,6 +99,7 @@ class PlayerControllerMinimax(PlayerController):
         # NOTE: Don't forget to initialize the children of the current node 
         #       with its compute_and_get_children() method!
         move = model.best_next_move(initial_tree_node)
+        # return model.next_move(initial_tree_node)
 
         # random_move = random.randrange(5)
         return ACTION_TO_STR[move]

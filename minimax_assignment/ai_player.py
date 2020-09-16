@@ -6,6 +6,7 @@ class MinMaxModel(object):
     def __init__(self, depth):
         self.depth = depth
         self.boundary_location = 20
+        self.time_threshold = 65*1e-3
         # self.fish_scores = fish_scores
 
     def simple_heuristic(self, state):
@@ -15,10 +16,12 @@ class MinMaxModel(object):
 
     def best_next_move(self, node):
         startTime = time.time()
-
         possible_values = {}
         alpha = -math.inf
         for child in node.compute_and_get_children():
+            if time.time() - startTime > self.time_threshold:
+                return max(possible_values, key=possible_values.get)
+
             mini_max_result = self.minimax_algorith(child, self.depth, alpha)
             if mini_max_result >= alpha:
                 alpha = mini_max_result
