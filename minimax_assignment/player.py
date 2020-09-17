@@ -101,8 +101,8 @@ class PlayerControllerMinimax(PlayerController):
         # NOTE: Don't forget to initialize the children of the current node 
         #       with its compute_and_get_children() method!
         # print(initial_tree_node.state.get_hook_positions())
-        print(initial_tree_node.state.get_fish_positions())
-        print(initial_tree_node.state.get_fish_scores())
+        # print(initial_tree_node.state.get_fish_positions())
+        # print(initial_tree_node.state.get_fish_scores())
         # print(initial_tree_node.state.fish_scores)
 
         move = model.best_next_move(initial_tree_node)

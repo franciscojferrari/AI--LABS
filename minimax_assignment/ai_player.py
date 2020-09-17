@@ -10,22 +10,24 @@ class MinMaxModel(object):
         self.fish_values = None
         self.time_threshold = 65*1e-3
         self.init_fish_values(init_data)
-        # print(self.fish_type)
+        # print(self.indexing)
         self.init_zobrist()
 
     def init_fish_values(self, init_data):
         init_data.pop("game_over")
         updated_fish_values = {}
-        fish_type_values = {}
+        indexing = {}
         i = 0
         for fish, value in init_data.items():
-            print(i)
+            # print(i)
             updated_fish_values[int(fish[-1])] = value["score"]
-            if value["score"] not in fish_type_values:
-                fish_type_values[value["score"]] = i
+            if value["score"] not in indexing:
+                indexing[value["score"]] = i
                 i+=1
         self.fish_values = updated_fish_values
-        self.fish_type = fish_type_values
+        indexing['h0'] = i
+        indexing['h1'] = i+1
+        self.indexing = indexing
 
     def simple_heuristic(self, state):
         # scores =
@@ -33,7 +35,7 @@ class MinMaxModel(object):
         return max_score - min_score
 
     def best_next_move(self, node):
-        self.computeHash(node.state)
+
         startTime = time.time()
         possible_values = {}
         alpha = -math.inf
@@ -53,6 +55,8 @@ class MinMaxModel(object):
             return self.get_heuristic(node)
         if node.state.player == 0:
             maxEval = -math.inf
+            self.get_heuristic(node)
+            self.computeHash(node.state)
             for child in node.compute_and_get_children():
                 maxEval = max(
                     maxEval, self.minimax_algorith(child, depth - 1, alpha, betta)
@@ -74,39 +78,32 @@ class MinMaxModel(object):
                     # Alpha cut-off
                     break
             return minEval
-    # def alpha_beta_with_memory(self, node, alpha, beta, depth):
-        
-    #     if depth == 0:
-    #     self.get_heuristic(node)
-    #     i
+
+
     def init_zobrist(self):
-        self.zobTable = [[[random.randint(1,2**4 - 1) for i in range(len(self.fish_type)+2)]for j in range(self.boundary_location)]for k in range(self.boundary_location )]
+        self.zobTable = [[[random.randint(1,2**64 - 1) for i in range(len(self.indexing)+2)]for j in range(self.boundary_location)]for k in range(self.boundary_location )]
+    
     def computeHash(self, state):
         h = 0
         hook_positions = state.get_hook_positions()
         fish_positions = state.get_fish_positions()
         fish_scores = state.get_fish_scores()
         checking = {}
+
         for fish_id, possition in fish_positions.items():
             key = ''.join(map(str,possition))
-            # print(fish_id)
-            # print(self.fish_type)
-        #     checking[''.join(possition)] = self.fish_type[fish_id]
-        # #     position_xy = fish_positions[fish_id]
-        # #     index = self.fish_type[score]
-        # print(checking)
-        
-        # for i in range(self.boundary_location):
-        #     for j in range(self.boundary_location):
-        #         if element['ij'] == "ij":
-        #             h^= self.zobTable[i][j][piece]
+            checking[key] = self.indexing[fish_scores[fish_id]]
+
+        checking[''.join(map(str,hook_positions[0]))] = self.indexing['h0']
+        checking[''.join(map(str,hook_positions[1]))] = self.indexing['h1']
+
+        for i in range(self.boundary_location):
+            for j in range(self.boundary_location):
+                if str(i)+str(j) in checking.keys():
+                    h ^= self.zobTable[i][j][checking[str(i)+str(j)]]
+        return h
                 
                 
-                    
-
-
-
-        
     def get_heuristic(self, node):
         """
         - Distance of hook to closest fish
@@ -145,10 +142,10 @@ class MinMaxModel(object):
         max_score, min_score = state.get_player_scores()
         fish_caught_max, fish_caught_min = state.get_caught()
         fish_score_max = (
-            self.fish_values[fish_caught_max] if fish_caught_max else 0
+            self.fish_values[fish_caught_max] if fish_caught_max != None else 0
         )
         fish_score_min = (
-            self.fish_values[fish_caught_min] if fish_caught_min else 0
+            self.fish_values[fish_caught_min] if fish_caught_min != None else 0
         )
         return max_score - min_score + fish_score_max - fish_score_min
 
