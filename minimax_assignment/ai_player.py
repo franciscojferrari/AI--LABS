@@ -8,10 +8,11 @@ class MinMaxModel(object):
         self.depth = depth
         self.boundary_location = 20
         self.fish_values = None
-        self.time_threshold = 65*1e-3
+        self.time_threshold = 60*1e-3
         self.init_fish_values(init_data)
         # print(self.indexing)
         self.init_zobrist()
+        self.startTime = None
 
     def init_fish_values(self, init_data):
         init_data.pop("game_over")
@@ -30,24 +31,31 @@ class MinMaxModel(object):
         self.indexing = indexing
 
     def simple_heuristic(self, state):
-        # scores =
         max_score, min_score = state.get_player_scores()
         return max_score - min_score
 
     def best_next_move(self, node):
+        self.startTime = time.time()
+        best_move = None
 
-        startTime = time.time()
-        possible_values = {}
-        alpha = -math.inf
-        for child in node.compute_and_get_children():
-            if time.time() - startTime > self.time_threshold:
-                return max(possible_values, key=possible_values.get)
+        for depth in range(20):
 
-            mini_max_result = self.minimax_algorith(child, self.depth, alpha)
-            if mini_max_result >= alpha:
-                alpha = mini_max_result
-                possible_values[child.move] = mini_max_result
-        return max(possible_values, key=possible_values.get)
+            possible_values = {}
+            alpha = -math.inf
+            if time.time() - self.startTime > self.time_threshold:
+                # print(f"reaching depth {depth}")
+                break
+            for child in node.compute_and_get_children():
+                if time.time() - self.startTime > self.time_threshold:
+                    best_move = max(possible_values, key=possible_values.get)
+
+                mini_max_result = self.minimax_algorith(child, depth, alpha)
+                if mini_max_result >= alpha:
+                    alpha = mini_max_result
+                    possible_values[child.move] = mini_max_result
+
+            best_move = max(possible_values, key=possible_values.get)
+        return best_move
 
     def minimax_algorith(self, node, depth, alpha=-math.inf, betta=math.inf):
         if depth == 0 or len(node.compute_and_get_children()) == 0:
@@ -65,6 +73,8 @@ class MinMaxModel(object):
                 if alpha >= betta:
                     # Alpha betta prunning. We stop the interation on the children nodes
                     break
+                if time.time() - self.startTime > self.time_threshold:
+                    break
             return maxEval
         else:
             minEval = math.inf
@@ -76,6 +86,8 @@ class MinMaxModel(object):
                 if betta <= alpha:
                     # Alpha betta prunning. We stop the interation on the children nodes
                     # Alpha cut-off
+                    break
+                if time.time() - self.startTime > self.time_threshold:
                     break
             return minEval
 
