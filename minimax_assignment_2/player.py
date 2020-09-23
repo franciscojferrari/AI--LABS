@@ -73,7 +73,7 @@ class PlayerControllerMinimax(PlayerController):
         """
         # EDIT THIS METHOD TO RETURN A MINIMAX MODEL ###
 
-        model = MinMaxModel(10, initial_data)
+        model = MinMaxModel(7, initial_data)
 
         return model
 
