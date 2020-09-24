@@ -22,7 +22,7 @@ class MinMaxModel(object):
             if value["score"] not in indexing:
                 indexing[value["score"]] = i
                 i+=1
-        self.fish_values = updated_fish_values
+        self.fish_values =  {int(fish.split('fish')[1]):value['score'] for fish, value in init_data.items()}
         indexing['h0'] = i
         indexing['h1'] = i+1
         self.indexing = indexing
@@ -184,11 +184,11 @@ class MinMaxModel(object):
             if score_heuristic < 0:
                 return -math.inf
             return 0.0
-        fish_scores = node.state.fish_scores
-        distance_heuristic = self.get_distance_heuristic(hook_positions, fish_positions, fish_caught_max, fish_caught_min, fish_scores)
+
+        distance_heuristic = self.get_distance_heuristic(hook_positions, fish_positions, fish_caught_max, fish_caught_min)
         return distance_heuristic + score_heuristic * 100
 
-    def get_distance_heuristic(self, hook_positions, fish_positions, fish_caught_max, fish_caught_min, fish_scores):
+    def get_distance_heuristic(self, hook_positions, fish_positions, fish_caught_max, fish_caught_min):
     
         scores = []  # heuristics for both players
         
@@ -204,7 +204,7 @@ class MinMaxModel(object):
                         self.boundary_location - abs(fish_location[0] - hook_position[0])
                     )
                     distance = x_difference + y_difference
-                heuristic += fish_scores[fish_id] * math.exp(-2 * distance)
+                heuristic += self.fish_values[fish_id] * math.exp(-2 * distance)
             scores.append(heuristic)
         return scores[0] - scores[1]
 
