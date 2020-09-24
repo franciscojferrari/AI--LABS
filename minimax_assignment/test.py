@@ -1,10 +1,3 @@
-# uncompyle6 version 3.7.4
-# Python bytecode 3.7 (3394)
-# Decompiled from: Python 3.7.9 (default, Aug 31 2020, 07:22:35) 
-# [Clang 10.0.0 ]
-# Embedded file name: opponent.py
-# Compiled at: 2020-08-28 21:03:54
-# Size of source mod 2**32: 6992 bytes
 import math
 from collections import defaultdict
 import time, random
@@ -33,63 +26,61 @@ class MinimaxModel(object):
         children = node.compute_and_get_children()
         if len(children) == 1:
             return ACTION_TO_STR[children[0].move]
-        alpha = -math.inf
-        beta = math.inf
-        best_value = -math.inf
-        best_move = 0
-        children_values = [-math.inf] * len(children)
-        for i, child in enumerate(children):
-            value = self.alpha_beta_prunning(child, alpha, beta, depth=tree_depth)
-            children_values[i] = value
-            if value > best_value:
-                best_value = value
-                best_move = ACTION_TO_STR[child.move]
-                alpha = value
-                if time.time() - self.start > self.max_time:
-                    return best_move
-                if best_value == math.inf:
-                    return best_move
+        else:
+            alpha = -math.inf
+            beta = math.inf
+            best_value = -math.inf
+            best_move = 0
+            children_values = [-math.inf] * len(children)
+            for i, child in enumerate(children):
+                value = self.alpha_beta_prunning(child, alpha, beta, depth=tree_depth)
+                children_values[i] = value
+                if value > best_value:
+                    best_value = value
+                    best_move = ACTION_TO_STR[child.move]
+                    alpha = value
+                    if time.time() - self.start > self.max_time:
+                        return best_move
+                    if best_value == math.inf:
+                        return best_move
 
-        return best_move
+            return best_move
 
     def alpha_beta_prunning(self, node, alpha, beta, depth):
         if depth == self.max_depth:
             return self.compute_heuristic(node.state)
+        else:
             children = node.compute_and_get_children()
             if len(children) == 0:
                 return self.compute_heuristic(node.state)
             player = node.state.player
             if player == self.max_player:
                 best_value = -math.inf
-                best_move = 0
                 for child in children:
                     value = self.alpha_beta_prunning(child, alpha, beta, depth + 1)
                     if value > best_value:
                         best_value = value
-                        best_move = child.move
                         alpha = max(alpha, best_value)
-                    if not best_value == math.inf:
-                        if alpha >= beta:
-                            break
-                        if time.time() - self.start > self.max_time:
-                            break
-
-        else:
-            best_value = math.inf
-            best_move = 0
-            for child in children:
-                value = self.alpha_beta_prunning(child, alpha, beta, depth + 1)
-                if value < best_value:
-                    best_value = value
-                    best_move = child.move
-                    beta = min(beta, best_value)
-                if not best_value == -math.inf:
-                    if alpha >= beta:
+                    if best_value == math.inf or alpha >= beta:
                         break
                     if time.time() - self.start > self.max_time:
                         break
 
-        return best_value
+            else:
+                best_value = math.inf
+                best_move = 0
+                for child in children:
+                    value = self.alpha_beta_prunning(child, alpha, beta, depth + 1)
+                    if value < best_value:
+                        best_value = value
+                        best_move = child.move
+                        beta = min(beta, best_value)
+                    if best_value == -math.inf or alpha >= beta:
+                        break
+                    if time.time() - self.start > self.max_time:
+                        break
+
+            return best_value
 
     def compute_heuristic(self, state, only_scores=False):
         scores = state.get_player_scores()
@@ -105,12 +96,13 @@ class MinimaxModel(object):
             if score_based_value < 0:
                 return -math.inf
             return 0.0
-        if only_scores:
+        elif only_scores:
             return score_based_value
-        value_max_player = self.get_proximity_value(hook_positions, fish_positions, caught_fish, self.max_player)
-        value_min_player = self.get_proximity_value(hook_positions, fish_positions, caught_fish, 1 - self.max_player)
-        proximity_value = value_max_player - value_min_player
-        return score_based_value + proximity_value
+        else:
+            value_max_player = self.get_proximity_value(hook_positions, fish_positions, caught_fish, self.max_player)
+            value_min_player = self.get_proximity_value(hook_positions, fish_positions, caught_fish, 1 - self.max_player)
+            proximity_value = value_max_player - value_min_player
+            return score_based_value + proximity_value
 
     def get_score_based_value(self, caught_fish, scores):
         extra_score_max = self.fish_scores[caught_fish[self.max_player]] if caught_fish[self.max_player] is not None else 0
@@ -138,4 +130,3 @@ class StateRepresentative(object):
         self.explored_depth = explored_depth
         self.value = value
         self.best_move = best_move
-# okay decompiling opponent.pyc

@@ -8,8 +8,9 @@ class MinMaxModel(object):
         self.depth = depth
         self.boundary_location = 20
         self.fish_values = None
-        self.time_threshold = 70*1e-3
-        self.hash_table = {}
+        self.time_threshold = 59*1e-3
+        
+        # self.hash_table_2 = {}
         self.init_fish_values(init_data)
 
 
@@ -31,77 +32,87 @@ class MinMaxModel(object):
     def best_next_move(self, node):
         self.startTime = time.time()
         best_move = 0
-        
+        self.hash_table = {}
         children = node.compute_and_get_children()
         if len(children) == 1:
             return children[0].move
         alpha = -math.inf
         beta = math.inf
-        for increasing_depth in range(self.depth):
 
+        for increasing_depth in range(self.depth):
             for child in children:
-                mini_max_value = self.minimax_algorith(child, increasing_depth, alpha, beta)
+
+                mini_max_value = self.negamax_algorithm(child, increasing_depth, alpha, beta, 1)
                 if mini_max_value >= alpha:
                     best_move = child.move
                     alpha = mini_max_value
-                    if (self.time_threshold - (time.time() - self.startTime) ) <= 1*1e-3:
-                        return best_move
+                if (time.time() - self.startTime) > self.time_threshold:
+                    return best_move
 
         return best_move
 
+    def negamax_algorithm(self, node, depth, alpha= -math.inf, beta= math.inf, color = 1):
+        alphaOrig = alpha
 
-    def minimax_algorith(self, node, depth, alpha=-math.inf, betta=math.inf):
-
-        if depth == 0:
-            return self.get_heuristic(node) # Calculate Heuristics
-        
         state_hash = self.computeNewHash(node.state)
+
         if state_hash in self.hash_table:
-            if self.hash_table[state_hash]['depth'] >= depth:
-                return self.hash_table[state_hash]['evaluation']
+            ttEntry = self.hash_table[state_hash]
+            if ttEntry['depth'] >= depth:
 
-        children =  node.compute_and_get_children()
-        if len(children) == 0:
-            return self.get_heuristic(node)
+                if ttEntry['flag'] == 'EXACT':
+                    return ttEntry['evaluation']
+                    
+                if ttEntry['flag'] == 'LOWERBOUND' :
+                    alpha = max(alpha, ttEntry['evaluation'])
+                    
+                elif ttEntry['flag'] == 'UPPERBOUND':
+                    beta = min(beta, ttEntry['evaluation'])
+                
+                if alpha >= beta:
+                    return ttEntry['evaluation']
 
-        if node.state.player == 0:
-            maxEval = -math.inf
-            random.shuffle(children)
-            for child in children:
-                maxEval = max(
-                    maxEval, 
-                    self.minimax_algorith(child, depth - 1, alpha, betta)
-                )
-                alpha = max(alpha, maxEval)
+        children = node.compute_and_get_children()
 
-                if alpha >= betta:
-                    break # Alpha betta prunning. We stop the interation on the children nodes
-                if (self.time_threshold - (time.time() - self.startTime) ) <= 8*1e-3:
-                    break
+        if depth == 0 or len(children) == 0:
+            value = self.get_heuristic(node) * color
+            ttEntry = {'evaluation' : value,  'depth': depth }
 
-            self.hash_table[state_hash] = {}
-            self.hash_table[state_hash]['evaluation'] = maxEval
-            self.hash_table[state_hash]['depth'] = depth
-            return maxEval
+            if value <= alpha:
+                ttEntry['flag'] = 'LOWERBOUND'
+            elif value >= beta:
+                ttEntry['flag'] = 'UPPERBOUND'
+            else:
+                ttEntry['flag'] = 'EXACT'
+            self.hash_table[state_hash] = ttEntry   
+            return value
+
+        best_value = -math.inf
+        random.shuffle(children)
+        for child in children:
+            best_value = max(best_value, -self.negamax_algorithm(child, depth-1, -alpha, -beta, -color))
+            alpha = max(alpha, best_value)
+            if alpha >= beta:
+                break
+            if (time.time() - self.startTime) > self.time_threshold:
+                break
+        
+        ttEntry = {}
+        ttEntry['evaluation'] = best_value
+        if best_value <= alphaOrig:
+            ttEntry['flag'] = 'UPPERBOUND'
+        elif best_value >= beta:
+            ttEntry['flag'] = 'LOWERBOUND'
         else:
-            minEval = math.inf
-            random.shuffle(children)
-            for child in children:
-                minEval = min(
-                    minEval, self.minimax_algorith(child, depth - 1, alpha, betta)
-                )
-                betta = min(betta, minEval)
-                if betta <= alpha:
-                    break  # Alpha cut-off # Alpha betta prunning. We stop the interation on the children nodes
-                if (self.time_threshold - (time.time() - self.startTime) ) <= 8*1e-3:
-                    break
+            ttEntry['flag'] = 'EXACT'
+        ttEntry['depth'] = depth
+        self.hash_table[state_hash] = ttEntry
 
-            self.hash_table[state_hash] = {}
-            self.hash_table[state_hash]['evaluation'] = minEval
-            self.hash_table[state_hash]['depth'] = depth
+        # state_hash_2 = self.computeNewHash(node.parent.state)
+        # if state_hash_2 in self.hash_table_2:
+        #     self.hash_table_2[state_hash_2] = max(self.hash_table_2[state_hash_2], best_value)
 
-            return minEval
-
+        return best_value
 
     def computeNewHash(self, state):
         hook_positions = state.get_hook_positions()
@@ -123,7 +134,7 @@ class MinMaxModel(object):
 
         h1_x, h1_y = hook_positions[1]
         checking[str(h1_x)+str(h1_y)] = self.indexing['h1']
-        checking['player'] = state.player
+        # checking['player'] = state.player
         # checking[str(abs(h1_x-20))+str(h1_y)] = self.indexing['h1']
 
         return hash(frozenset(checking.items()))
@@ -138,8 +149,20 @@ class MinMaxModel(object):
         """
         distance_heuristic = self.get_distance_heuristic(node.state)
         score_heuristic = self.get_score_heuristic(node.state)
+        fish_positions = node.state.get_fish_positions()
+        
+        n_fish = len(fish_positions)
+        fish_caught_max, fish_caught_min = node.state.get_caught()
+        n_caught = int(fish_caught_max != None) + int(fish_caught_min != None)
 
-        return distance_heuristic + score_heuristic * 500 #- player_distance_heuristic*10
+        if n_fish == 0 or n_fish == n_caught:
+            if score_heuristic > 0:
+                return math.inf
+            if score_heuristic < 0:
+                return -math.inf
+            return 0
+        
+        return distance_heuristic + score_heuristic * 100 #- player_distance_heuristic*10
 
     def get_distance_heuristic(self, state):
         hook_positions = state.get_hook_positions()
@@ -165,13 +188,11 @@ class MinMaxModel(object):
 
     def get_score_heuristic(self, state):
         max_score, min_score = state.get_player_scores()
+
         fish_caught_max, fish_caught_min = state.get_caught()
-        fish_score_max = (
-            self.fish_values[fish_caught_max] if fish_caught_max != None else 0
-        )
+        fish_score_max = (self.fish_values[fish_caught_max] if fish_caught_max != None else 0)
+        
         fish_score_min = (
             self.fish_values[fish_caught_min] if fish_caught_min != None else 0
         )
         return max_score - min_score + fish_score_max - fish_score_min
-
-

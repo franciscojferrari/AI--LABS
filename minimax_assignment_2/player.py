@@ -5,7 +5,7 @@ from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
 
-from ai_player import MinMaxModel
+from ai_player_negamax import MinMaxModel
 
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
@@ -17,7 +17,6 @@ class PlayerControllerHuman(PlayerController):
         next movement.
         :return:
         """
-
         while True:
             # send message to game that you are ready
             msg = self.receiver()
@@ -50,7 +49,7 @@ class PlayerControllerMinimax(PlayerController):
             # Possible next moves: "stay", "left", "right", "up", "down"
             best_move = self.search_best_next_move(
                 model=model, initial_tree_node=node)
-
+            # break
             # Execute next action
             self.sender({"action": best_move, "search_time": None})
 

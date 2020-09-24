@@ -1,6 +1,7 @@
 import math
 import random
 import time
+import sys
 
 
 class MinMaxModel(object):
@@ -8,10 +9,9 @@ class MinMaxModel(object):
         self.depth = depth
         self.boundary_location = 20
         self.fish_values = None
-        self.time_threshold = 70*1e-3
-        self.hash_table = {}
+        self.time_threshold = 65*1e-3
+        
         self.init_fish_values(init_data)
-
 
     def init_fish_values(self, init_data):
         init_data.pop("game_over")
@@ -19,6 +19,7 @@ class MinMaxModel(object):
         indexing = {}
         i = 0
         for fish, value in init_data.items():
+            # print(i)
             updated_fish_values[int(fish[-1])] = value["score"]
             if value["score"] not in indexing:
                 indexing[value["score"]] = i
@@ -29,43 +30,46 @@ class MinMaxModel(object):
         self.indexing = indexing
 
     def best_next_move(self, node):
+        
         self.startTime = time.time()
-        best_move = 0
+        possible_values = {}
+        self.hash_table = {}
         
         children = node.compute_and_get_children()
         if len(children) == 1:
             return children[0].move
-        alpha = -math.inf
-        beta = math.inf
+
         for increasing_depth in range(self.depth):
-
+            alpha = -math.inf
             for child in children:
-                mini_max_value = self.minimax_algorith(child, increasing_depth, alpha, beta)
-                if mini_max_value >= alpha:
-                    best_move = child.move
-                    alpha = mini_max_value
-                    if (self.time_threshold - (time.time() - self.startTime) ) <= 1*1e-3:
-                        return best_move
+                
+                if (time.time() - self.startTime) > self.time_threshold:
+                    return max(possible_values, key=possible_values.get)
 
-        return best_move
+                mini_max_result = self.minimax_algorith(child, increasing_depth, alpha)
+                
+                if mini_max_result >= alpha:
+
+                    alpha = mini_max_result
+                    possible_values[child.move] = mini_max_result
+                
+        
+        return max(possible_values, key=possible_values.get)
 
 
     def minimax_algorith(self, node, depth, alpha=-math.inf, betta=math.inf):
-
-        if depth == 0:
+        
+        if depth == 0 or len(node.compute_and_get_children()) == 0:
             return self.get_heuristic(node) # Calculate Heuristics
         
-        state_hash = self.computeNewHash(node.state)
+        state_hash = self.computeNewHash(node.state, depth)
         if state_hash in self.hash_table:
             if self.hash_table[state_hash]['depth'] >= depth:
                 return self.hash_table[state_hash]['evaluation']
 
-        children =  node.compute_and_get_children()
-        if len(children) == 0:
-            return self.get_heuristic(node)
-
         if node.state.player == 0:
             maxEval = -math.inf
+            children =  node.compute_and_get_children()
             random.shuffle(children)
             for child in children:
                 maxEval = max(
@@ -76,7 +80,7 @@ class MinMaxModel(object):
 
                 if alpha >= betta:
                     break # Alpha betta prunning. We stop the interation on the children nodes
-                if (self.time_threshold - (time.time() - self.startTime) ) <= 8*1e-3:
+                if (time.time() - self.startTime) > self.time_threshold:
                     break
 
             self.hash_table[state_hash] = {}
@@ -85,6 +89,7 @@ class MinMaxModel(object):
             return maxEval
         else:
             minEval = math.inf
+            children =  node.compute_and_get_children()
             random.shuffle(children)
             for child in children:
                 minEval = min(
@@ -93,7 +98,7 @@ class MinMaxModel(object):
                 betta = min(betta, minEval)
                 if betta <= alpha:
                     break  # Alpha cut-off # Alpha betta prunning. We stop the interation on the children nodes
-                if (self.time_threshold - (time.time() - self.startTime) ) <= 8*1e-3:
+                if (time.time() - self.startTime) > self.time_threshold:
                     break
 
             self.hash_table[state_hash] = {}
@@ -103,7 +108,8 @@ class MinMaxModel(object):
             return minEval
 
 
-    def computeNewHash(self, state):
+
+    def computeNewHash(self, state, depth):
         hook_positions = state.get_hook_positions()
         fish_positions = state.get_fish_positions()
         fish_scores = state.get_fish_scores()
@@ -119,12 +125,10 @@ class MinMaxModel(object):
 
         h0_x, h0_y = hook_positions[0]
         checking[str(h0_x)+str(h0_y)] = self.indexing['h0']
-        # checking[str(abs(h0_x-20))+str(h0_y)] = self.indexing['h0']
 
         h1_x, h1_y = hook_positions[1]
         checking[str(h1_x)+str(h1_y)] = self.indexing['h1']
         checking['player'] = state.player
-        # checking[str(abs(h1_x-20))+str(h1_y)] = self.indexing['h1']
 
         return hash(frozenset(checking.items()))
         
@@ -139,7 +143,7 @@ class MinMaxModel(object):
         distance_heuristic = self.get_distance_heuristic(node.state)
         score_heuristic = self.get_score_heuristic(node.state)
 
-        return distance_heuristic + score_heuristic * 500 #- player_distance_heuristic*10
+        return distance_heuristic + score_heuristic*2  #- player_distance_heuristic*10
 
     def get_distance_heuristic(self, state):
         hook_positions = state.get_hook_positions()
@@ -155,10 +159,11 @@ class MinMaxModel(object):
                 # get the minimum score of the difference in x
                 x_difference = min(
                     abs(hook_position[0] - location[0]),
-                    abs(hook_position[0] - self.boundary_location - location[0]),
+                    self.boundary_location - abs(hook_position[0] - location[0]),
                 )
 
                 distance = x_difference + y_difference
+                # heuristic += fish_scores[fish_id] * (1 / (distance + sys.float_info.epsilon)) #Having a fish far away is a bad thing so the inverse is usefull
                 heuristic += fish_scores[fish_id] * math.exp(-2 * distance)
             scores.append(heuristic)
         return scores[0] - scores[1]
@@ -174,4 +179,11 @@ class MinMaxModel(object):
         )
         return max_score - min_score + fish_score_max - fish_score_min
 
-
+        #should the distance between boats be calculated for each player and change the heuristic according to that?
+    def get_player_distance_heuristic(self, state):
+        hook_positions = state.get_hook_positions()
+        boat_distance = min(abs(hook_positions[0][0] - hook_positions[1][0]), abs(hook_positions[0][0] - hook_positions[1][0] - self.boundary_location))
+        if state.player == 0:
+            return 1 / (boat_distance + 1e-4)
+        else:
+            return -1 / (boat_distance + 1e-4)
