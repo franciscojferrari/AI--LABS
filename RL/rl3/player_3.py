@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import numpy as np
+import math
 
 from agent import Fish
 from communicator import Communicator
@@ -89,11 +90,11 @@ class PlayerControllerHuman(PlayerController):
 def epsilon_greedy(Q,
                    state,
                    all_actions,
-                   eps_type="constant",
                    current_total_steps=0,
                    epsilon_initial=1,
                    epsilon_final=0.2,
-                   anneal_timesteps=10000):
+                   anneal_timesteps=10000,
+                   eps_type="constant"):
 
     if eps_type == 'constant':
         epsilon = epsilon_final
@@ -101,10 +102,10 @@ def epsilon_greedy(Q,
         # Implemenmt the epsilon-greedy algorithm for a constant epsilon value
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # It is recommended you use the np.random module
-        if np.random.random() < epsilon:
-            return np.random.choice(all_actions)
+        if random.random() < epsilon:
+            action = np.random.choice(all_actions)
         else:
-            return np.nanargmax(Q[state])
+            action = np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.1
 
     elif eps_type == 'linear':
@@ -116,14 +117,16 @@ def epsilon_greedy(Q,
         scheduler_linear = ScheduleLinear(anneal_timesteps, epsilon_final, epsilon_initial)
         epsilon = scheduler_linear.value(current_total_steps)
 
-        if np.random.random() < epsilon:
-            return np.random.choice(all_actions)
+        if random.random() < epsilon:
+            action = np.random.choice(all_actions)
         else:
-            return np.nanargmax(Q[state])
+            action = np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEENEX  3.2
 
     else:
         raise "Epsilon greedy type unknown"
+
+    return action
 
 
 class PlayerControllerRL(PlayerController, FishesModelling):
@@ -165,6 +168,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
         # Initialize a numpy array with ns state rows and na state columns with float values from 0.0 to 1.0.
         Q = np.random.rand(ns,na)
+        # Q = np.zeros(shape=(ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
 
         for s in range(ns):
@@ -222,9 +226,9 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 s_next = self.ind2state[s_next_tuple]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
+                # Implement the Bellman Update equation to update Q
                 Q[s_current][action] = (1 - self.alpha) * Q[s_current][action] + self.alpha * (R + self.gamma * max([Q[s_next][a] for a in self.allowed_moves[s_next]]))
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
-
                 s_current = s_next
                 current_total_steps += 1
                 steps += 1

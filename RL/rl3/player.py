@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import random
 import numpy as np
+import math
 
 from agent import Fish
 from communicator import Communicator
@@ -89,11 +90,11 @@ class PlayerControllerHuman(PlayerController):
 def epsilon_greedy(Q,
                    state,
                    all_actions,
-                   eps_type="constant",
                    current_total_steps=0,
                    epsilon_initial=1,
                    epsilon_final=0.2,
-                   anneal_timesteps=10000):
+                   anneal_timesteps=10000,
+                   eps_type="constant"):
 
     if eps_type == 'constant':
         epsilon = epsilon_final
@@ -167,6 +168,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
         # Initialize a numpy array with ns state rows and na state columns with float values from 0.0 to 1.0.
         Q = np.random.rand(ns,na)
+        # Q = np.zeros(shape=(ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
 
         for s in range(ns):
@@ -224,9 +226,9 @@ class PlayerControllerRL(PlayerController, FishesModelling):
                 s_next = self.ind2state[s_next_tuple]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
+                # Implement the Bellman Update equation to update Q
                 Q[s_current][action] = (1 - self.alpha) * Q[s_current][action] + self.alpha * (R + self.gamma * max([Q[s_next][a] for a in self.allowed_moves[s_next]]))
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
-
                 s_current = s_next
                 current_total_steps += 1
                 steps += 1
@@ -291,10 +293,7 @@ class PlayerControllerRandom(PlayerController):
         end_episode = False
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
         # Initialize a numpy array with ns state rows and na state columns with zeros
-        n = np.zeros(shape=(ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
-
-
 
         while episode <= self.episode_max:
             s_current = init_pos
@@ -306,9 +305,8 @@ class PlayerControllerRandom(PlayerController):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
                 # Chose an action from all possible actions and add to the counter of actions per state
-                action = random.choice(possible_actions)
+                action = None
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
-                n[s_current][action] +=1
 
                 action_str = self.action_list[action]
                 msg = {"action": action_str, "exploration": True}
@@ -364,6 +362,3 @@ class ScheduleLinear(object):
         # Return the annealed linear value
         return self.initial_p + (self.final_p - self.initial_p) * (t / self.schedule_timesteps)
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.2
-
-
-# scheduler_linear = ScheduleLinear(5000, 0.2, 1)
