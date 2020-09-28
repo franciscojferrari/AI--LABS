@@ -101,10 +101,10 @@ def epsilon_greedy(Q,
         # Implemenmt the epsilon-greedy algorithm for a constant epsilon value
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # It is recommended you use the np.random module
-        if random.random() < epsilon:
-            action =  np.random.choice(all_actions)
+        if np.random.random() < epsilon:
+            return np.random.choice(all_actions)
         else:
-            action =  np.nanargmax(Q[state])
+            return np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.1
 
     elif eps_type == 'linear':
@@ -116,16 +116,14 @@ def epsilon_greedy(Q,
         scheduler_linear = ScheduleLinear(anneal_timesteps, epsilon_final, epsilon_initial)
         epsilon = scheduler_linear.value(current_total_steps)
 
-        if random.random() < epsilon:
-            action =  np.random.choice(all_actions)
+        if np.random.random() < epsilon:
+            return np.random.choice(all_actions)
         else:
-            action =  np.nanargmax(Q[state])
+            return np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEENEX  3.2
 
     else:
         raise "Epsilon greedy type unknown"
-
-    return action
 
 
 class PlayerControllerRL(PlayerController, FishesModelling):
@@ -191,7 +189,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
         # Change the while loop to incorporate a threshold limit, to stop training when the mean difference
         # in the Q table is lower than the threshold
-        while episode <= self.episode_max  and diff > self.threshold:
+        while episode <= self.episode_max and diff > self.threshold:
             # ADD YOUR CODE SNIPPET BETWEENEX. 2.3
 
             s_current = init_pos
@@ -358,5 +356,5 @@ class ScheduleLinear(object):
     def value(self, t):
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.2
         # Return the annealed linear value
-        return self.initial_p
+        return self.initial_p + (self.final_p - self.initial_p) * (t / self.schedule_timesteps)
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.2
