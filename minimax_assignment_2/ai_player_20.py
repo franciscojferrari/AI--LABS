@@ -15,11 +15,9 @@ class MinMaxModel(object):
 
     def init_fish_values(self, init_data):
         init_data.pop("game_over")
-        updated_fish_values = {}
         indexing = {}
         i = 0
         for fish, value in init_data.items():
-            updated_fish_values[int(fish[-1])] = value["score"]
             if value["score"] not in indexing:
                 indexing[value["score"]] = i
                 i+=1
