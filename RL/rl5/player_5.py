@@ -95,7 +95,6 @@ def epsilon_greedy(Q,
                    epsilon_final=0.2,
                    anneal_timesteps=10000,
                    eps_type="constant"):
-
     if eps_type == 'constant':
         epsilon = epsilon_final
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.1
@@ -103,9 +102,9 @@ def epsilon_greedy(Q,
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # It is recommended you use the np.random module
         if random.random() < epsilon:
-            action =  np.random.choice(all_actions)
+            action = np.random.choice(all_actions)
         else:
-            action =  np.nanargmax(Q[state])
+            action = np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEEN EX 3.1
 
     elif eps_type == 'linear':
@@ -118,9 +117,9 @@ def epsilon_greedy(Q,
         epsilon = scheduler_linear.value(current_total_steps)
 
         if random.random() < epsilon:
-            action =  np.random.choice(all_actions)
+            action = np.random.choice(all_actions)
         else:
-            action =  np.nanargmax(Q[state])
+            action = np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEENEX  3.2
 
     else:
@@ -167,7 +166,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         self.allowed_movements()
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
         # Initialize a numpy array with ns state rows and na state columns with float values from 0.0 to 1.0.
-        Q = np.random.rand(ns,na)
+        Q = np.random.rand(ns, na)
         # Q = np.zeros(shape=(ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
 
@@ -190,7 +189,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         current_total_steps = 0
         steps = 0
 
-        N_rewards  = [a * 1.1 for a in range(6)]
+        N_rewards = [a * 1.1 for a in range(4)]
 
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
         # Change the while loop to incorporate a threshold limit, to stop training when the mean difference
@@ -200,14 +199,16 @@ class PlayerControllerRL(PlayerController, FishesModelling):
             s_current = init_pos
             R_total = 0
             steps = 0
-            
+
             while not end_episode:
                 # selection of action
                 list_pos = self.allowed_moves[s_current]
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
                 # Chose an action from all possible actions
-                action = epsilon_greedy(Q, s_current, list_pos, current_total_steps,self.epsilon_initial, self.epsilon_final, self.annealing_timesteps, "linear")
+                action = epsilon_greedy(Q, s_current, list_pos, current_total_steps,
+                                        self.epsilon_initial, self.epsilon_final,
+                                        self.annealing_timesteps, "linear")
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 5
@@ -229,12 +230,13 @@ class PlayerControllerRL(PlayerController, FishesModelling):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
                 # Implement the Bellman Update equation to update Q
-                alpha = alpha_scheduler(current_total_steps, 0.8, 0.1, 4000)
+                alpha = alpha_scheduler(current_total_steps, 0.95, 0.35, 5000)
                 # gamma = gamma_scheduler(current_total_steps, 0.8, 0.99, self.annealing_timesteps)
                 gamma = self.gamma
                 # alpha = self.alpha
                 # Q[s_current][action] = (1 - self.alpha) * Q[s_current][action] + self.alpha * (R + self.gamma * max([Q[s_next][a] for a in self.allowed_moves[s_next]]))
-                Q[s_current][action] = (1 - alpha) * Q[s_current][action] + alpha* (R + gamma * max([Q[s_next][a] for a in self.allowed_moves[s_next]]))
+                Q[s_current][action] = (1 - alpha) * Q[s_current][action] + alpha * (
+                            R + gamma * max([Q[s_next][a] for a in self.allowed_moves[s_next]]))
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
                 s_current = s_next
                 current_total_steps += 1
@@ -249,7 +251,7 @@ class PlayerControllerRL(PlayerController, FishesModelling):
             Q_old[:] = Q
             print(
                 "Episode: {}, Steps {}, Diff: {:6e}, Total Reward: {}, Total Steps {}"
-                .format(episode, steps, diff, R_total, current_total_steps))
+                    .format(episode, steps, diff, R_total, current_total_steps))
             episode += 1
             end_episode = False
 
@@ -374,11 +376,12 @@ class ScheduleLinear(object):
 
 
 def alpha_scheduler(t, alpha, final_alpha, annealing_timesteps):
-    return alpha - (final_alpha - alpha) * (t /annealing_timesteps)
+    return alpha - (final_alpha - alpha) * (t / annealing_timesteps)
 
 
 def gamma_scheduler(t, gamma, final_gamma, annealing_timesteps):
     return gamma + (final_gamma - gamma) * (t / annealing_timesteps)
+
 
 def all_same(items):
     return len(set(items)) == 1
