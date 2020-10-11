@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RL/rl3/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/RL/rl3/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RL/rl3/player_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/RL/rl3/player_3.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,13 +25,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="JupyterTrust" id="3b8c3a50-90d8-4721-883b-5dda2a153168" />
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-1624" />
-    <option name="y" value="-331" />
-    <option name="width" value="1680" />
-    <option name="height" value="1027" />
+  <component name="ProjectId" id="1ijoQw451VRjyo7EIl7KiwM18Bd" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -143,6 +141,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -162,6 +161,7 @@
       <workItem from="1600167922494" duration="5109000" />
       <workItem from="1600246383450" duration="12301000" />
       <workItem from="1600698200544" duration="1872000" />
+      <workItem from="1602430350503" duration="391000" />
     </task>
     <servers />
   </component>
@@ -175,7 +175,7 @@
     </todo-panel>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AI__LABS$test_strategy.coverage" NAME="test_strategy Coverage Results" MODIFIED="1601293137643" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/hmm_sk" />
