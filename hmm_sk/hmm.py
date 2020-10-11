@@ -52,6 +52,15 @@ class HMM:
     def run_inference(self, O: List, probs: bool = False) -> float:
         """Check if oberservation sequence is likely to be produced by the model
         """
+        # if probs:
+        #     return foward_algorithm_prob(
+        #         self.A.copy(), self.B.copy(), self.pi.copy(), O.copy(), 60
+        #     )
+        # else:
+        #     _, scaling_vector = forward_algorithm(
+        #         self.A.copy(), self.B.copy(), self.pi.copy(), O.copy()
+        #     )
+        #     return log_PO_given_lambda(scaling_vector)
         _, scaling_vector = forward_algorithm(
             self.A.copy(), self.B.copy(), self.pi.copy(), O.copy()
             )

@@ -161,7 +161,6 @@ def backward_algorithm(
 
         for i in range(len(A)):
             beta_temp = 0
-
             for j in range(len(A)):
                 beta_temp += A[i][j] * B[j][O[t + 1]] * scaled_beta_matrix[0][j]
             beta_temp = beta_temp * scaling_vector[t]
@@ -328,6 +327,7 @@ def uniform_initialization(n: int, m: int):
     return [[1 / m for _ in range(m)] for _ in range(n)]
 
 def count_based_initialization(n: int, m: int, same_state_probability: float = 0.7):
+    #Diagonal values have a higher probability
     matrix = []
     for i in range(n):
         matrix.append([])
