@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="840a60a3-ae4d-48fe-8f1f-047c42af45b6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minimax_assignment_final/minimax.py" beforeDir="false" afterPath="$PROJECT_DIR$/minimax_assignment_final/minimax.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +39,9 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/HMM" />
     </key>
@@ -161,7 +164,7 @@
       <workItem from="1600167922494" duration="5109000" />
       <workItem from="1600246383450" duration="12301000" />
       <workItem from="1600698200544" duration="1872000" />
-      <workItem from="1602430350503" duration="391000" />
+      <workItem from="1602430350503" duration="792000" />
     </task>
     <servers />
   </component>

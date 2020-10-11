@@ -70,6 +70,4 @@ class TT:
         h1_x, h1_y = hook_positions[1]
         checking[str(h1_x) + str(h1_y)] = self.indexing["h1"]
 
-        print(checking, "\n")
-
         return hash(frozenset(checking.items()))

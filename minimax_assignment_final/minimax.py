@@ -13,7 +13,7 @@ class MiniMaxModel(object):
         self.fish_values = None
         self.init_fish_values(init_data)
         self.iterative_deepening_depth = 7
-        self.timeout_s = 57e-3
+        self.timeout_s = 58e-3
         self.start_time = None
         self.timeout = False
         self.TT = TT(len(self.fish_values), self.indexing)
@@ -211,9 +211,9 @@ class MiniMaxModel(object):
             self.fish_values[fish_caught_min] if fish_caught_min != None else 0
         )
 
-        # return max_score - min_score + fish_score_max - fish_score_min
+        return max_score - 0.5*min_score + fish_score_max - 0.5*fish_score_min
 
-        return max_score + fish_score_max
+
 
     def search_best_next_move_iterative_deepening(self, initial_tree_node):
         """Iterative deepening search.
